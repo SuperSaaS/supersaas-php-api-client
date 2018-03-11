@@ -1,0 +1,6 @@
+/.idea
+/vendor
+/composer.lock
+.DS_Store
+composer.phar
+build/*

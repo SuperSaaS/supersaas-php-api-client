@@ -1,0 +1,28 @@
+{
+  "name": "supersaas/api-client",
+  "version": "0.9.0",
+  "description": "Online bookings/appointments/calendars using the SuperSaaS scheduling platform. The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing website or CRM software.",
+  "homepage": "https://www.supersaas.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Travis Dunn",
+      "email": "travis@supersaas.com"
+    }
+  ],
+  "keywords": [
+    "online appointment schedule", "booking calendar", "appointment book", "reservation system",
+    "scheduling software", "online booking system", "scheduling system"
+  ],
+  "require" : {
+    "php": ">=5.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^3.7 || ^4.8 || ^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  }
+}
