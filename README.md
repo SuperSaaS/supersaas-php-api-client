@@ -19,9 +19,9 @@ No external libraries. Only the native `json_encode`/`json_decode` and `stream_c
 
 1: Composer
 
-The SuperSaaS PHP API Client is available from Packagist and can be included in your project via composer. Note, the supersaas-api-client may update major versions with breaking changes, so it's recommended to use a major version when expressing the gem dependency. e.g.
+The SuperSaaS PHP API Client is available from Packagist and can be included in your project via composer. Note, the supersaas-api-client may update major versions with breaking changes, so it's recommended to use a major version when expressing the package dependency. e.g.
 
-    $ composer require supersaas/supersaas-api-client:1.*
+    $ composer require "supersaas/api-client:0.9.*"
     
     
 In `composer.json`:
