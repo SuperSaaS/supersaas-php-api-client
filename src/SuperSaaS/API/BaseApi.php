@@ -40,9 +40,9 @@ class BaseApi
 
     protected function validateDatetime ($value) {
         if ($value instanceof \DateTime) {
-            return $value;
+            return $value->format('Y-m-d H:i:s');
         } else if (preg_match(self::DATETIME_REGEX, $value.'')) {
-            return \DateTime::createFromFormat('Y-d-m G:i:s', $value);
+            return $value;
         } else {
             throw new \Exception(new SSS_Exception("Invalid datetime parameter: " . $value . ". Provide a DateTime object or formatted 'YYYY-DD-MM HH:MM:SS' string."));
         }

@@ -2,19 +2,21 @@
 
 class Configuration
 {
-    const DEFAULT_HOST	= "http://localhost:3000";
+    const DEFAULT_HOST	= "https://www.supersaas.com";
 
     public $account_name;
     public $host;
     public $password;
     public $user_name;
-    public $test;
+    public $dry_run;
+    public $verbose;
 
     public function __construct () {
-        $this->account_name = getenv('SSS_SDK_ACCOUNT_NAME');
+        $this->account_name = getenv('SSS_API_ACCOUNT_NAME');
         $this->host = Configuration::DEFAULT_HOST;
-        $this->password = getenv('SSS_SDK_PASSWORD');
-        $this->user_name = getenv('SSS_SDK_USER_NAME');
-        $this->test = FALSE;
+        $this->password = getenv('SSS_API_PASSWORD');
+        $this->user_name = getenv('SSS_API_USER_NAME');
+        $this->dry_run = FALSE;
+        $this->verbose = FALSE;
     }
 }

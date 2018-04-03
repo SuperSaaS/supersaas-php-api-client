@@ -128,6 +128,8 @@ class Client
             throw new \Exception(new SSS_Exception("Invalid HTTP Method: " . $http_method . ". Only `GET`, `POST`, `PUT`, `DELETE` supported."));
         }
 
+        echo "\n\n".var_dump($query)."\n\n";
+
         $url = $this->host . "/api" . $path . ".json";
         if (!empty($query)) {
             $url = $url . '?' . http_build_query($query);
@@ -147,10 +149,10 @@ class Client
         }
 
         if ($this->verbose) {
-            echo("### SuperSaaS Client Request:");
-            echo($http_method . " " . $url);
-            echo($params);
-            echo("------------------------------");
+            echo("### SuperSaaS Client Request:\n\r");
+            echo($http_method . " " . $url."\n\r");
+            echo(implode($params)."\n\r");
+            echo("------------------------------\n\r");
         }
 
         $this->lastRequest = $http;
@@ -164,12 +166,12 @@ class Client
             throw new \Exception(new SSS_Exception("HTTP Request Error " . $url));
         } else if (!empty($res)) {
             if ($this->verbose) {
-                echo("Response:");
-                echo($res);
-                echo("==============================");
+                echo("Response:\n\r");
+                echo($res."\n\r");
+                echo("==============================\n\r");
             }
 
-            $obj = json_decode($res);
+            $obj = json_decode($res, TRUE);
             return $obj;
         } else {
             return array();

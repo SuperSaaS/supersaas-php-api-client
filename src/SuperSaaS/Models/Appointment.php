@@ -66,24 +66,24 @@ class Appointment extends BaseModel
         $this->mobile = $attributes['mobile'];
         $this->name = $attributes['name'];
         $this->phone = $attributes['phone'];
-        $this->price = $attributes['price'];
-        $this->resName = $attributes['res_name'];
-        $this->resourceId = $attributes['resource_id'];
-        $this->role = $attributes['role'];
-        $this->scheduleId = $attributes['schedule_id'];
+        $this->price = $this->issetAttr($attributes, 'price');
+        $this->resName = $this->issetAttr($attributes, 'res_name');
+        $this->resourceId = $this->issetAttr($attributes, 'resource_id');
+        $this->role = $this->issetAttr($attributes, 'role');
+        $this->scheduleId = $this->issetAttr($attributes, 'schedule_id');
         $this->scheduleName = $attributes['schedule_name'];
-        $this->serviceId = $attributes['service_id'];
-        $this->serviceName = $attributes['service_name'];
-        $this->slotId = $attributes['slot_id'];
+        $this->serviceId = $this->issetAttr($attributes, 'service_id');
+        $this->serviceName = $this->issetAttr($attributes, 'service_name');
+        $this->slotId = $this->issetAttr($attributes, 'slot_id');
         $this->start = $attributes['start'];
-        $this->status = $attributes['status'];
-        $this->superField = $attributes['super_field'];
-        $this->updatedBy = $attributes['updated_by'];
-        $this->updatedOn = $attributes['updated_on'];
-        $this->userId = $attributes['user_id'];
-        $this->waitlisted = $attributes['waitlisted'];
+        $this->status = $this->issetAttr($attributes, 'status');
+        $this->superField = $this->issetAttr($attributes, 'super_field');
+        $this->updatedBy = $this->issetAttr($attributes, 'updated_by');
+        $this->updatedOn = $this->issetAttr($attributes, 'updated_on');
+        $this->userId = $this->issetAttr($attributes, 'user_id');
+        $this->waitlisted = $this->issetAttr($attributes, 'waitlisted');
 
-        $this->errors = $attributes['errors'];
+        $this->errors = $this->issetAttr($attributes, 'errors');
 
         if (!empty($attributes['form'])) {
             $this->form = new Form($attributes['form']);

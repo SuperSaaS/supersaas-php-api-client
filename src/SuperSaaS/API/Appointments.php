@@ -151,6 +151,10 @@ class Appointments extends BaseApi
 
     private function mapSlotOrBookings($res, $slot = FALSE) {
         $arr = array();
+        if (isset($res["slots"])) {
+            $slot = TRUE;
+            $res = $res["slots"];
+        }
         foreach ($res as $attributes) {
             if ($slot) {
                 $arr[] = new Models\Slot($attributes);
