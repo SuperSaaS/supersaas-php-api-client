@@ -59,9 +59,9 @@ If the client isn't configured explicitly, it will use default `ENV` variables f
 Set these `ENV` variables before calling the client. 
 
     putenv("SSS_API_ACCOUNT_NAME=your-env-supersaas-account-name");
-    putenv("SSS_API_PASSWORD=your-env-supersaas-account-name"); 
+    putenv("SSS_API_PASSWORD=your-env-supersaas-account-password"); 
     SuperSaaS\Client::Instance()->account_name; //=> 'your-env-supersaas-account-name'
-    SuperSaaS\Client::Instance()->password; //=> 'your-env-supersaas-account-name'
+    SuperSaaS\Client::Instance()->password; //=> 'your-env-supersaas-account-password'
 
 All configuration options can be individually set on the client.
 
