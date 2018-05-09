@@ -20,5 +20,11 @@
     $from = date('Y-m-d H:i:s');
     $client->appointments->available($schedule_id, $from);
 
+    $user_id = getenv('SSS_API_UID');
+    if (!empty($user_id)) {
+      echo "\n\rlisting user agenda...\n\r";
+      $client->appointments->agenda($schedule_id, $user_id, $from);
+    }
+
     echo "\n\r";
 ?>

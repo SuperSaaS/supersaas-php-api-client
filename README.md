@@ -191,8 +191,8 @@ The ./examples folder contains several executable PHP scripts demonstrating how 
 
 The examples will require your account name, password, and some of the examples a schedule id and/or user id and/or form id. These can be set as environment variables. e.g.
 
-    $ export SSS_API_UID=myuserid && export SSS_API_SCHEDULE=myscheduleid SSS_API_ACCOUNT_NAME=myaccountname && SSS_API_PASSWORD=mypassword && php -f ./examples/appointments.php
-    $ export SSS_API_FORM=myuserid && export SSS_API_ACCOUNT_NAME=myaccountname && export SSS_API_PASSWORD=mypassword && php -f ./examples/forms.php
+    $ export SSS_API_UID=myuserid SSS_API_SCHEDULE=myscheduleid SSS_API_ACCOUNT_NAME=myaccountname  SSS_API_PASSWORD=mypassword && php -f ./examples/appointments.php
+    $ export SSS_API_FORM=myuserid SSS_API_ACCOUNT_NAME=myaccountname SSS_API_PASSWORD=mypassword && php -f ./examples/forms.php
     $ export SSS_API_ACCOUNT_NAME=myaccountname && export SSS_API_PASSWORD=mypassword && php -f ./examples/users.php
 
 ## Testing

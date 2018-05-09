@@ -154,6 +154,8 @@ class Appointments extends BaseApi
         if (isset($res["slots"])) {
             $slot = TRUE;
             $res = $res["slots"];
+        } elseif (isset($res['bookings'])) {
+            $res = $res['bookings'];
         }
         foreach ($res as $attributes) {
             if ($slot) {
