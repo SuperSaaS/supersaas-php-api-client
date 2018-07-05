@@ -133,9 +133,9 @@ Update an appointment by `schedule_id` and `appointment_id` with appointment att
 
 #### Delete Appointment/Booking
 
-Delete a single appointment by `appointment_id`:
+Delete a single appointment by `schedule_id` and `appointment_id`:
 
-    SuperSaaS\Client::Instance()->appointments->delete(12345); //=> array()
+    SuperSaaS\Client::Instance()->appointments->delete(12345, 67890); //=> array()
 
 #### Get Appointment/Booking
 

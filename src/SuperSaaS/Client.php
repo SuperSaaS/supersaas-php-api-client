@@ -162,7 +162,7 @@ class Client
 
         $req  = stream_context_create(array('http' => $http));
         $res = file_get_contents($url, false, $req);
-        if ($res == FALSE) {
+        if ($res === FALSE) {
             throw new \Exception(new SSS_Exception("HTTP Request Error " . $url));
         } else if (!empty($res)) {
             if ($this->verbose) {

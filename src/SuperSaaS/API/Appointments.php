@@ -122,10 +122,11 @@ class Appointments extends BaseApi
         return new Models\Appointment($res);
     }
 
-    public function delete($appointment_id)
+    public function delete($schedule_id, $appointment_id)
     {
         $path = '/bookings/' . $this->validateId($appointment_id);
-        return $this->client->delete($path);
+        $query = array('schedule_id' => $schedule_id);
+        return $this->client->delete($path, $query);
     }
 
     public function changes($schedule_id, $from_time = NULL)

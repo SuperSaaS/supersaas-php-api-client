@@ -67,7 +67,7 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
     }
 
     public function testDelete() {
-        $this->assertNotNull($this->client->appointments->delete(12345));
+        $this->assertNotNull($this->client->appointments->delete(12345, 67890));
     }
 
     private function appointmentAttributes() {
