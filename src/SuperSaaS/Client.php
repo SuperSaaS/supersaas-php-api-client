@@ -151,7 +151,8 @@ class Client
         if ($this->verbose) {
             echo("### SuperSaaS Client Request:\n\r");
             echo($http_method . " " . $url."\n\r");
-            echo(implode($params)."\n\r");
+            echo("DATA:\n\r");
+            $this->printArray($params);
             echo("------------------------------\n\r");
         }
 
@@ -181,13 +182,39 @@ class Client
     private function removeEmptyKeys ($arr) {
         $valueArr = array();
         foreach ($arr as $key=>$val) {
-            if ($val !== NULL && $val !== "")
+            if ($val !== NULL && $val !== "") {
+                if ($this->isAssociativeArray($val)) {
+                    $val = $this->removeEmptyKeys($val);
+                }
                 $valueArr[$key] = $val;
+            }
         }
         return $valueArr;
     }
 
     private function userAgent () {
         return "SSS/" . self::VERSION . " PHP/" . phpversion() . " API/" . self::API_VERSION;
+    }
+
+    private function isAssociativeArray($arr)
+    {
+        if (is_array($arr)) {
+            return count(array_filter(array_keys($arr), 'is_string')) > 0;
+        } else {
+            return false;
+        }
+    }
+
+    private function printArray($arr) {
+        foreach ($arr as $key => $val) {
+            if ($this->isAssociativeArray($val)) {
+                echo "  $key:\n";
+                foreach ($val as $key2 => $val2) {
+                    echo "    $key2 = $val2\n";
+                }
+            } else {
+                echo "  $key = $val\n";
+            }
+        }
     }
 }
