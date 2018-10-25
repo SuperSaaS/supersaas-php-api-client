@@ -13,7 +13,7 @@ class Configuration
 
     public function __construct () {
         $this->account_name = getenv('SSS_API_ACCOUNT_NAME');
-        $this->host = Configuration::DEFAULT_HOST;
+        $this->host = getenv('SSS_API_HOST') ? getenv('SSS_API_HOST') : Configuration::DEFAULT_HOST;
         $this->password = getenv('SSS_API_PASSWORD');
         $this->user_name = getenv('SSS_API_USER_NAME');
         $this->dry_run = FALSE;
