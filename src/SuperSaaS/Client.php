@@ -161,9 +161,18 @@ class Client
             return array();
         }
 
-        $req  = stream_context_create(array('http' => $http));
+        $http['ignore_errors'] = true;
+
+        $req = stream_context_create(array('http' => $http));
         $res = file_get_contents($url, false, $req);
-        if ($res === FALSE) {
+        $statusCode = $this->httpStatusCode($http_response_header);
+
+        if ($statusCode < 200 || $statusCode > 299) {
+            if ($this->verbose) {
+                echo("Error Response (" . $statusCode . "):\n\r");
+                echo($res."\n\r");
+                echo("==============================\n\r");
+            }
             throw new \Exception(new SSS_Exception("HTTP Request Error " . $url));
         } else if (!empty($res)) {
             if ($this->verbose) {
@@ -203,6 +212,17 @@ class Client
         } else {
             return false;
         }
+    }
+
+    private function httpStatusCode($headers)
+    {
+        if(is_array($headers))
+        {
+            $parts = explode(' ',$headers[0]);
+            if(count($parts) > 1)
+                return intval($parts[1]);
+        }
+        return 0;
     }
 
     private function printArray($arr) {
