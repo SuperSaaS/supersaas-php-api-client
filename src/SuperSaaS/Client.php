@@ -128,7 +128,9 @@ class Client
             throw new \Exception(new SSS_Exception("Invalid HTTP Method: " . $http_method . ". Only `GET`, `POST`, `PUT`, `DELETE` supported."));
         }
 
-        echo "\n\n".var_dump($query)."\n\n";
+        if ($this->verbose) {
+            echo "\n\n".var_dump($query)."\n\n";
+        }
 
         $url = $this->host . "/api" . $path . ".json";
         if (!empty($query)) {
