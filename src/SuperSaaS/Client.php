@@ -4,7 +4,7 @@ use SuperSaaS\API;
 
 class Client
 {
-    const API_VERSION = "1";
+    const API_VERSION = "2";
     const VERSION = "1.0.0";
 
     /**
