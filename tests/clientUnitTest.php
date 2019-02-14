@@ -9,7 +9,7 @@ class ClientUnitTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $config = new SuperSaas\Configuration;
         $config->account_name = 'accnt';
-        $config->password = 'pwd';
+        $config->api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
         $config->dry_run = true;
         $this->client = new SuperSaas\Client($config);
     }
@@ -29,9 +29,9 @@ class ClientUnitTest extends PHPUnit_Framework_TestCase
     }
 
     public function testInstanceConfiguration() {
-        SuperSaas\Client::configure('accnt', 'pwd', true, true, 'host');
+        SuperSaas\Client::configure('accnt', 'xxxxxxxxxxxxxxxxxxxxxx', true, true, 'host');
         $this->assertEquals('accnt', SuperSaas\Client::Instance()->account_name);
-        $this->assertEquals('pwd', SuperSaas\Client::Instance()->password);
+        $this->assertEquals('xxxxxxxxxxxxxxxxxxxxxx', SuperSaas\Client::Instance()->api_key);
         $this->assertEquals(true, SuperSaas\Client::Instance()->dry_run);
         $this->assertEquals(true, SuperSaas\Client::Instance()->verbose);
         $this->assertEquals('host', SuperSaas\Client::Instance()->host);

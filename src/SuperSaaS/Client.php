@@ -15,7 +15,7 @@ class Client
     /**
      * @var string
      */
-    public $password;
+    public $api_key;
 
     /**
      * @var string
@@ -66,9 +66,9 @@ class Client
         return $instance;
     }
 
-    public static function configure($account_name, $password, $dry_run=FALSE, $verbose=FALSE, $host=NULL) {
+    public static function configure($account_name, $api_key, $dry_run=FALSE, $verbose=FALSE, $host=NULL) {
         self::Instance()->account_name = $account_name;
-        self::Instance()->password = $password;
+        self::Instance()->api_key = $api_key;
         self::Instance()->dry_run = $dry_run;
         self::Instance()->verbose = $verbose;
         self::Instance()->host = $host;
@@ -80,7 +80,7 @@ class Client
             $configuration = new Configuration();
         }
         $this->account_name = $configuration->account_name;
-        $this->password = $configuration->password;
+        $this->api_key = $configuration->api_key;
         $this->verbose = $configuration->verbose;
         $this->host = $configuration->host;
         $this->dry_run = $configuration->dry_run;
@@ -115,9 +115,9 @@ class Client
         {
             throw new \Exception(new SSS_Exception("Account name not configured. Call `SuperSaaS_Client.configure`."));
         }
-        if (empty($this->password))
+        if (empty($this->api_key))
         {
-            throw new \Exception(new SSS_Exception("Account password not configured. Call `SuperSaaS_Client.configure`."));
+            throw new \Exception(new SSS_Exception("Account api key not configured. Call `SuperSaaS_Client.configure`."));
         }
         $params = $this->removeEmptyKeys($params);
         $query = $this->removeEmptyKeys($query);
@@ -140,7 +140,7 @@ class Client
         $http = array(
             'method' => $http_method,
             'header'  => array(
-                'Authorization: Basic ' . base64_encode($this->account_name . ':' . $this->password),
+                'Authorization: Basic ' . base64_encode($this->account_name . ':' . $this->api_key),
                 'Accept: application/json',
                 'Content-Type: application/json',
                 'User-Agent: ' . $this->userAgent(),

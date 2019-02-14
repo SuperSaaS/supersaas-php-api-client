@@ -9,7 +9,7 @@ class SchedulesUnitTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $config = new SuperSaas\Configuration;
         $config->account_name = 'accnt';
-        $config->password = 'pwd';
+        $config->api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
         $config->dry_run = true;
         $this->client = new SuperSaas\Client($config);
     }

@@ -9,7 +9,7 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $config = new SuperSaas\Configuration;
         $config->account_name = 'accnt';
-        $config->password = 'pwd';
+        $config->api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
         $config->dry_run = true;
         $this->client = new SuperSaas\Client($config);
     }
@@ -75,7 +75,6 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
             'description' => 'Testing.',
             'name' => 'Test',
             'email' => 'test@example.com',
-            'password' => 'pass123',
             'full_name' => 'Tester Test',
             'address' => '123 St, City',
             'mobile' => '555-5555',
