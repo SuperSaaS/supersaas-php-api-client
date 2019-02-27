@@ -12,8 +12,8 @@
     $client = SuperSaaS\Client::Instance();
     $client->verbose = TRUE;
 
-    if (empty($client->account_name) || empty($client->password)) {
+    if (empty($client->account_name) || empty($client->api_key)) {
       echo "ERROR! Missing account credentials. Rerun the script with your credentials, e.g.\n\r";
-      echo "    export SSS_API_ACCOUNT_NAME=<myaccountname> && export SSS_API_PASSWORD=<mypassword> && php -f ./examples/appointments.php\n\r";
+      echo "    export SSS_API_ACCOUNT_NAME=<myaccountname> && export SSS_API_KEY=<myapikey> && php -f ./examples/appointments.php\n\r";
       return;
     }

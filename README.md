@@ -7,7 +7,7 @@ The SuperSaaS API provides services that can be used to add online booking and s
 ## Prerequisites
 
 1. [Register for a (free) SuperSaaS account](https://www.supersaas.com/accounts/new), and
-2. get your account name and password.
+2. get your account name and API key on the [Account Info](https://www.supersaas.com/accounts/edit) page.
 
 ##### Dependencies
 
@@ -44,28 +44,28 @@ The `Client` can be used either (1) through the singleton helper method `Instanc
 
 And configured with authorization credentials using the `configure` method:
 
-    SuperSaaS\Client::configure('accountname', 'password');
+    SuperSaaS\Client::configure('accountname', 'apikey');
     
 Or else by (2) simply creating a new client instance and setting the properties manually, e.g.
     
     $client = new Supersaas\Client();
     $client->account_name = 'accountname';
-    $client->password = 'password';
+    $client->api_key = 'apikey';
 
 > Note, ensure that `configure` is called before `Instance`, otherwise the client will be initialized with configuration defaults.
 
-If the client isn't configured explicitly, it will use default `ENV` variables for the account name and password.
+If the client isn't configured explicitly, it will use default `ENV` variables for the account name and api key.
 
 Set these `ENV` variables before calling the client. 
 
     putenv("SSS_API_ACCOUNT_NAME=your-env-supersaas-account-name");
-    putenv("SSS_API_PASSWORD=your-env-supersaas-account-password"); 
+    putenv("SSS_API_KEY=your-env-supersaas-account-api-key"); 
     SuperSaaS\Client::Instance()->account_name; //=> 'your-env-supersaas-account-name'
-    SuperSaaS\Client::Instance()->password; //=> 'your-env-supersaas-account-password'
+    SuperSaaS\Client::Instance()->api_key; //=> 'your-env-supersaas-account-api-key'
 
 All configuration options can be individually set on the client.
 
-    SuperSaaS\Client::Instance()->password = 'pwd'; 
+    SuperSaaS\Client::Instance()->api_key = 'xxxxxxxxxxxxxxxxxxxxxx'; 
     SuperSaaS\Client::Instance()->verbose = true;
     ...
 
@@ -189,11 +189,11 @@ Get a single form by `form_id`:
 
 The ./examples folder contains several executable PHP scripts demonstrating how to use the API Client for common requests.
 
-The examples will require your account name, password, and some of the examples a schedule id and/or user id and/or form id. These can be set as environment variables. e.g.
+The examples will require your account name, api key, and some of the examples a schedule id and/or user id and/or form id. These can be set as environment variables. e.g.
 
-    $ export SSS_API_UID=myuserid SSS_API_SCHEDULE=myscheduleid SSS_API_ACCOUNT_NAME=myaccountname  SSS_API_PASSWORD=mypassword && php -f ./examples/appointments.php
-    $ export SSS_API_FORM=myuserid SSS_API_ACCOUNT_NAME=myaccountname SSS_API_PASSWORD=mypassword && php -f ./examples/forms.php
-    $ export SSS_API_ACCOUNT_NAME=myaccountname && export SSS_API_PASSWORD=mypassword && php -f ./examples/users.php
+    $ export SSS_API_UID=myuserid SSS_API_SCHEDULE=myscheduleid SSS_API_ACCOUNT_NAME=myaccountname  SSS_API_KEY=myapikey && php -f ./examples/appointments.php
+    $ export SSS_API_FORM=myuserid SSS_API_ACCOUNT_NAME=myaccountname SSS_API_KEY=myapikey && php -f ./examples/forms.php
+    $ export SSS_API_ACCOUNT_NAME=myaccountname && export SSS_API_KEY=myapikey && php -f ./examples/users.php
 
 ## Testing
 
