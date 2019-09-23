@@ -22,7 +22,7 @@ class BaseApi
         } else if (preg_match(self::INTEGER_REGEX, $value)) {
             return intval($value);
         } else {
-            throw new \Exception(new SSS_Exception("Invalid id parameter: " . $value . ". Provide a integer value."));
+            throw new SSS_Exception("Invalid id parameter: " . $value . ". Provide a integer value.");
         }
     }
 
@@ -32,7 +32,7 @@ class BaseApi
 
     protected function validatePresent ($value) {
         if (empty($value)) {
-            throw new \Exception(new SSS_Exception("Required parameter is missing."));
+            throw new SSS_Exception("Required parameter is missing.");
         } else {
             return $value;
         }
@@ -44,7 +44,7 @@ class BaseApi
         } else if (preg_match(self::DATETIME_REGEX, $value.'')) {
             return $value;
         } else {
-            throw new \Exception(new SSS_Exception("Invalid datetime parameter: " . $value . ". Provide a DateTime object or formatted 'YYYY-DD-MM HH:MM:SS' string."));
+            throw new SSS_Exception("Invalid datetime parameter: " . $value . ". Provide a DateTime object or formatted 'YYYY-DD-MM HH:MM:SS' string.");
         }
     }
 
@@ -52,7 +52,7 @@ class BaseApi
         if (in_array($value, $options)) {
 
         } else {
-            throw new \Exception(new SSS_Exception("Invalid option parameter: " . $value . ". Must be one of " . join(', ', $options)));
+            throw new SSS_Exception("Invalid option parameter: " . $value . ". Must be one of " . join(', ', $options));
         }
     }
 }
