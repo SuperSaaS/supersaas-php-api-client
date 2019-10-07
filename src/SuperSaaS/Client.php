@@ -1,6 +1,8 @@
 <?php namespace SuperSaaS;
 
 use SuperSaaS\API;
+use SuperSaaS\SSS_Exception;
+
 
 class Client
 {
@@ -108,16 +110,16 @@ class Client
     }
 
     /**
-     * @throws \Exception
+     * @throws SSS_Exception
      */
     public function request ($http_method, $path, $params = array(), $query = array()) {
         if (empty($this->account_name))
         {
-            throw new \Exception(new SSS_Exception("Account name not configured. Call `SuperSaaS_Client.configure`."));
+            throw new SSS_Exception("Account name not configured. Call `SuperSaaS_Client.configure`.");
         }
         if (empty($this->api_key))
         {
-            throw new \Exception(new SSS_Exception("Account api key not configured. Call `SuperSaaS_Client.configure`."));
+            throw new SSS_Exception("Account api key not configured. Call `SuperSaaS_Client.configure`.");
         }
         $params = $this->removeEmptyKeys($params);
         $query = $this->removeEmptyKeys($query);
@@ -125,7 +127,7 @@ class Client
         $params['account_name'] = $this->account_name;
 
         if (!in_array($http_method, array("GET", "POST", "PUT", "DELETE"))) {
-            throw new \Exception(new SSS_Exception("Invalid HTTP Method: " . $http_method . ". Only `GET`, `POST`, `PUT`, `DELETE` supported."));
+            throw new SSS_Exception("Invalid HTTP Method: " . $http_method . ". Only `GET`, `POST`, `PUT`, `DELETE` supported.");
         }
 
         if ($this->verbose) {
@@ -175,7 +177,7 @@ class Client
                 echo($res."\n\r");
                 echo("==============================\n\r");
             }
-            throw new \Exception(new SSS_Exception("HTTP Request Error " . $url));
+            throw new SSS_Exception("HTTP Request Error " . $url);
         } else if (!empty($res)) {
             if ($this->verbose) {
                 echo("Response:\n\r");
