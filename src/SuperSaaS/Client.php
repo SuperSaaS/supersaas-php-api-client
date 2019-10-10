@@ -7,7 +7,7 @@ use SuperSaaS\SSS_Exception;
 class Client
 {
     const API_VERSION = "2";
-    const VERSION = "1.0.0";
+    const VERSION = "1.0.2";
 
     /**
      * @var string
@@ -146,7 +146,8 @@ class Client
                 'Accept: application/json',
                 'Content-Type: application/json',
                 'User-Agent: ' . $this->userAgent(),
-            )
+            ),
+            'ignore_errors' => true,
         );
         if ($http_method !== 'GET' && !empty($params)) {
             $http['content'] = json_encode($params);
@@ -165,10 +166,8 @@ class Client
             return array();
         }
 
-        $http['ignore_errors'] = true;
-
         $req = stream_context_create(array('http' => $http));
-        $res = file_get_contents($url, false, $req);
+        $res = @file_get_contents($url, false, $req);
         $statusCode = $this->httpStatusCode($http_response_header);
 
         if ($statusCode < 200 || $statusCode > 299) {
