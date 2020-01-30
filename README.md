@@ -177,7 +177,7 @@ Get recently changed appointment slots by `schedule_id`, with `from_time` view p
 
 Get list of appointments by `schedule_id`, with `today`, `from time`, `to` time and `slot` view param:
 
-    Client.instance().appointments.range(schedule_id=12345, today=True, from_time='2020-01-31 00:00:00',from_time='2020-02-01 00:00:00' slot=False)
+    SuperSaaS\Client::Instance()->appointments->listAppointments(schedule_id=12345, today=TRUE, from_time='2020-01-31 00:00:00',from_time='2020-02-01 00:00:00' slot=False)
 
 #### List Template Forms
 
