@@ -159,25 +159,31 @@ Get agenda (upcoming) appointments by `schedule_id` and `user_id`, with `form` a
 
 Get available appointments by `schedule_id`, with `from` time and `length_minutes` and `resource` params:
 
-    SuperSaaS\Client::Instance()->appointments->available(12345, '2018-1-31 00:00:00', 15, 'My Class'); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->available(12345, '2018-01-31 00:00:00', 15, 'My Class'); //=> array(Appointment, ...)
 
 #### Get Recent Changes
 
 Get recently changed appointments by `schedule_id`, with `from_time` view param:
 
-    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-1-31 00:00:00', true); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', true); //=> array(Appointment, ...)
 
 #### Get Recent Changes Slots
 
 Get recently changed appointment slots by `schedule_id`, with `from_time` view param:
 
-    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-1-31 00:00:00', true); //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', true); //=> array(Slot, ...)
+    
+#### Get list of appointments
+
+Get list of appointments by `schedule_id`, with `today`, `from time`, `to` time and `slot` view param:
+
+    Client.instance().appointments.range(schedule_id=12345, today=True, from_time='2020-01-31 00:00:00',from_time='2020-02-01 00:00:00' slot=False)
 
 #### List Template Forms
 
 Get all forms by template `superform_id`, with `from` time param:
 
-    SuperSaaS\Client::Instance()->forms->list(12345, '2018-1-31 00:00:00'); //=> array(Form, ...)
+    SuperSaaS\Client::Instance()->forms->list(12345, '2018-01-31 00:00:00'); //=> array(Form, ...)
 
 #### Get Form
 
@@ -221,9 +227,6 @@ For additional troubleshooting, the client can be configured with the `verbose` 
 + [Python API Client](https://github.com/SuperSaaS/supersaas-python-api-client)
 + [Ruby API Client](https://github.com/SuperSaaS/supersaas-ruby-api-client)
 + [NodeJS API Client](https://github.com/SuperSaaS/supersaas-nodejs-api-client)
-+ [C# API Client](https://github.com/SuperSaaS/supersaas-csharp-api-client)
-+ [Objective-C API Client](https://github.com/SuperSaaS/supersaas-objc-api-client)
-+ [Go API Client](https://github.com/SuperSaaS/supersaas-go-api-client)
 
 Contact: [support@supersaas.com](mailto:support@supersaas.com)
 
