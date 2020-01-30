@@ -68,7 +68,7 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
 
     public function testListAppointments() {
             $from = date('Y-m-d H:i:s');
-            $this->assertNotNull($this->client->appointments->listAppointments(12345, $from));
+            $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from));
         }
 
     public function testDelete() {
