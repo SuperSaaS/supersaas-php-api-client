@@ -21,7 +21,7 @@ No external libraries. Only the native `json_encode`/`json_decode` and `stream_c
 
 The SuperSaaS PHP API Client is available from Packagist and can be included in your project via composer. Note, the supersaas-api-client may update major versions with breaking changes, so it's recommended to use a major version when expressing the package dependency. e.g.
 
-    $ composer require "supersaas/api-client:0.9.*"
+    $ composer require "supersaas/api-client:1.1.*"
     
     
 In `composer.json`:
