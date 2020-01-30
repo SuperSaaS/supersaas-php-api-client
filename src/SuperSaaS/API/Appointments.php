@@ -150,6 +150,19 @@ class Appointments extends BaseApi
         return $this->mapSlotOrBookings($res, true);
     }
 
+    public function listAppointments ($schedule_id, $today=FALSE, $from_time = NULL, $to = NULL, $slot = FALSE)
+        {
+            $path = '/range/' . $this->validateId($schedule_id);
+            $query = array(
+                'today' => $today ? $today : NULL,
+                'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+                'to' => empty($to) ? NULL : $this->validateDatetime($to),
+                'slot' => $slot ? $slot : NULL,
+            );
+            $res = $this->client->get($path, $query);
+            return $this->mapSlotOrBookings($res);
+        }
+
     private function mapSlotOrBookings($res, $slot = FALSE) {
         $arr = array();
         if (isset($res["slots"])) {
