@@ -68,7 +68,7 @@ class Client
         return $instance;
     }
 
-    public static function configure($account_name, $api_key, $dry_run=FALSE, $verbose=FALSE, $host=NULL) {
+    public static function configure($account_name, $api_key, $dry_run=FALSE, $verbose=FALSE, $host=Configuration::DEFAULT_HOST) {
         self::Instance()->account_name = $account_name;
         self::Instance()->api_key = $api_key;
         self::Instance()->dry_run = $dry_run;

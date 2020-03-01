@@ -79,7 +79,7 @@ https://www.supersaas.com/info/dev
 
 Get all account schedules:
 
-    SuperSaaS\Client::Instance()->schedules->list(); //=> array(Schedule, ...)
+    SuperSaaS\Client::Instance()->schedules->getList(); //=> array(Schedule, ...)
 
 #### List Resource
 
