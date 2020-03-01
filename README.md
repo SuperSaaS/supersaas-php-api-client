@@ -66,7 +66,7 @@ Set these `ENV` variables before calling the client.
 All configuration options can be individually set on the client.
 
     SuperSaaS\Client::Instance()->api_key = 'xxxxxxxxxxxxxxxxxxxxxx'; 
-    SuperSaaS\Client::Instance()->verbose = true;
+    SuperSaaS\Client::Instance()->verbose = TRUE;
     ...
 
 ## API Methods
@@ -93,7 +93,7 @@ _Note: does not work for capacity type schedules._
 
 Create a user with user attributes params:
 
-    SuperSaaS\Client::Instance()->users->create(array('full_name' => 'Example Name', 'email' => 'example@example.com')); //=> User
+    SuperSaaS\Client::Instance()->users->create(array('name' => 'name@name.com', 'full_name' => 'Example Name', 'email' => 'example@example.com')); //=> User
 
 #### Update User
 
@@ -123,7 +123,7 @@ Get all users with optional `form` and `limit`/`offset` pagination params:
 
 Create an appointment by `schedule_id` and `user_id` with appointment attributes and `form` and `webhook` params:
 
-    SuperSaaS\Client::Instance()->appointments->create(12345, 67890, array('full_name' => 'Example Name', 'email' => 'example@example.com', 'slot_id' => 12345), true, true); //=> Appointment
+    SuperSaaS\Client::Instance()->appointments->create(12345, 67890, array('full_name' => 'Example Name', 'email' => 'example@example.com', 'slot_id' => 12345), TRUE, TRUE); //=> Appointment
 
 #### Update Appointment/Booking
 
@@ -147,31 +147,30 @@ Get a single appointment by `schedule_id` and `appointment_id`:
 
 Get agenda (upcoming) appointments by `schedule_id` and `user_id`, with `form` and `slot` view params:
 
-    SuperSaaS\Client::Instance()->appointments->list(12345, 67890, true, true); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->getList(12345, 67890, TRUE, TRUE); //=> array(Appointment, ...)
 
 #### Get Agenda
 
 Get agenda (upcoming) appointments by `schedule_id` and `user_id`, with `form` and `slot` view params:
 
-    SuperSaaS\Client::Instance()->appointments->agenda(12345, 67890, true, true); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->agenda(schedule_id=12345, user_id=67890, form=TRUE, slot=FALSE); //=> array(Appointment, ...)
+    
+    SuperSaaS\Client::Instance()->appointments->agenda(schedule_id=12345, user_id=67890, form=TRUE, slot=TRUE); //=> array(Slot, ...)
 
 #### Get Available Appointments/Bookings
 
 Get available appointments by `schedule_id`, with `from` time and `length_minutes` and `resource` params:
 
-    SuperSaaS\Client::Instance()->appointments->available(12345, '2018-01-31 00:00:00', 15, 'My Class'); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->available(schedule_id=12345, from='2018-01-31 00:00:00', length_minutes=15, resource='My Class'); //=> array(Appointment, ...)
 
 #### Get Recent Changes
 
-Get recently changed appointments by `schedule_id`, with `from_time` view param:
 
-    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', true); //=> array(Appointment, ...)
+Get recently changed appointment slots by `schedule_id`, with `from_time` and `slot` view param:
 
-#### Get Recent Changes Slots
+    SuperSaaS\Client::Instance()->appointments->changes(schedule_id=12345, from_time='2018-01-31 00:00:00', slot=FALSE); //=> array(Appointment, ...)
 
-Get recently changed appointment slots by `schedule_id`, with `from_time` view param:
-
-    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', true); //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->changes(schedule_id=12345, from_time='2018-01-31 00:00:00', slot=TRUE); //=> array(Slot, ...)
     
 #### Get list of appointments
 
@@ -205,7 +204,7 @@ The examples will require your account name, api key, and some of the examples a
 
 The HTTP requests can be stubbed by configuring the client with the `dry_run` option, e.g.
 
-    SuperSaaS\Client::Instance()->dry_run = true;
+    SuperSaaS\Client::Instance()->dry_run = TRUE;
 
 Note, stubbed requests always return an empty array.
 
@@ -217,7 +216,7 @@ The headers, body, etc. of the last request can be inspected for assertion in te
 
 For additional troubleshooting, the client can be configured with the `verbose` option, which will `puts` any JSON contents in the request and response, e.g.
 
-    SuperSaaS\Client::Instance()->verbose = true;
+    SuperSaaS\Client::Instance()->verbose = TRUE;
 
 ## Additional Information
 

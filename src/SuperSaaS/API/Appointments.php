@@ -4,28 +4,29 @@ use SuperSaaS\Models;
 
 class Appointments extends BaseApi
 {
-    public function agenda ($schedule_id, $user_id, $from_time = NULL)
+    public function agenda ($schedule_id, $user_id, $from_time = NULL, $slot=FALSE)
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
             'user' => $this->validatePresent($user_id),
             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+            'slot' => $slot
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res);
+        return $this->mapSlotOrBookings($res, $slot);
     }
 
-    public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
-    {
-        $path = '/agenda/' . $this->validateId($schedule_id);
-        $query = array(
-            'user' => $this->validatePresent($user_id),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
-            'slot' => 'true'
-        );
-        $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, true);
-    }
+//     public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
+//     {
+//         $path = '/agenda/' . $this->validateId($schedule_id);
+//         $query = array(
+//             'user' => $this->validatePresent($user_id),
+//             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+//             'slot' => 'true'
+//         );
+//         $res = $this->client->get($path, $query);
+//         return $this->mapSlotOrBookings($res, true);
+//     }
 
     public function available($schedule_id, $from_time = NULL, $length_minutes = NULL, $resource = NULL, $full = NULL, $limit = NULL)  {
         $path = '/free/' . $this->validateId($schedule_id);
@@ -129,26 +130,27 @@ class Appointments extends BaseApi
         return $this->client->delete($path, $query);
     }
 
-    public function changes($schedule_id, $from_time = NULL)
+    public function changes($schedule_id, $from_time = NULL, $slot=FALSE)
     {
         $path = '/changes/' . $this->validateId($schedule_id);
         $query = array(
             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+            'slot' => $slot
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res);
+        return $this->mapSlotOrBookings($res, $slot);
     }
 
-    public function changesSlots ($schedule_id, $from_time = NULL)
-    {
-        $path = '/changes/' . $this->validateId($schedule_id);
-        $query = array(
-            'slot' => 'true',
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
-        );
-        $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, true);
-    }
+//     public function changesSlots ($schedule_id, $from_time = NULL)
+//     {
+//         $path = '/changes/' . $this->validateId($schedule_id);
+//         $query = array(
+//             'slot' => 'true',
+//             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+//         );
+//         $res = $this->client->get($path, $query);
+//         return $this->mapSlotOrBookings($res, true);
+//     }
 
     public function listAppointments ($schedule_id, $today=FALSE, $from_time = NULL, $to = NULL, $slot = FALSE)
         {
