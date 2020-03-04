@@ -9,24 +9,24 @@ class Appointments extends BaseApi
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
             'user' => $this->validatePresent($user_id),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
-            'slot' => $slot
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'slot' => empty($slot) ? NULL : TRUE
         );
         $res = $this->client->get($path, $query);
         return $this->mapSlotOrBookings($res, $slot);
     }
 
-//     public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
-//     {
-//         $path = '/agenda/' . $this->validateId($schedule_id);
-//         $query = array(
-//             'user' => $this->validatePresent($user_id),
-//             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
-//             'slot' => 'true'
-//         );
-//         $res = $this->client->get($path, $query);
-//         return $this->mapSlotOrBookings($res, true);
-//     }
+    public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
+    {
+        $path = '/agenda/' . $this->validateId($schedule_id);
+        $query = array(
+            'user' => $this->validatePresent($user_id),
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'slot' => 'true'
+        );
+        $res = $this->client->get($path, $query);
+        return $this->mapSlotOrBookings($res, true);
+    }
 
     public function available($schedule_id, $from_time = NULL, $length_minutes = NULL, $resource = NULL, $full = NULL, $limit = NULL)  {
         $path = '/free/' . $this->validateId($schedule_id);
@@ -134,23 +134,23 @@ class Appointments extends BaseApi
     {
         $path = '/changes/' . $this->validateId($schedule_id);
         $query = array(
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
-            'slot' => $slot
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'slot' => empty($slot) ? NULL : TRUE
         );
         $res = $this->client->get($path, $query);
         return $this->mapSlotOrBookings($res, $slot);
     }
 
-//     public function changesSlots ($schedule_id, $from_time = NULL)
-//     {
-//         $path = '/changes/' . $this->validateId($schedule_id);
-//         $query = array(
-//             'slot' => 'true',
-//             'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
-//         );
-//         $res = $this->client->get($path, $query);
-//         return $this->mapSlotOrBookings($res, true);
-//     }
+    public function changesSlots ($schedule_id, $from_time = NULL)
+    {
+        $path = '/changes/' . $this->validateId($schedule_id);
+        $query = array(
+            'slot' => 'true',
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+        );
+        $res = $this->client->get($path, $query);
+        return $this->mapSlotOrBookings($res, true);
+    }
 
     public function listAppointments ($schedule_id, $today=FALSE, $from_time = NULL, $to = NULL, $slot = FALSE)
         {
@@ -171,6 +171,7 @@ class Appointments extends BaseApi
             $slot = TRUE;
             $res = $res["slots"];
         } elseif (isset($res['bookings'])) {
+            $slot = FALSE;
             $res = $res['bookings'];
         }
         foreach ($res as $attributes) {

@@ -31,7 +31,7 @@ class BaseApi
     }
 
     protected function validatePresent ($value) {
-        if (empty($value)) {
+        if (!isset($value)) {
             throw new SSS_Exception("Required parameter is missing.");
         } else {
             return $value;
