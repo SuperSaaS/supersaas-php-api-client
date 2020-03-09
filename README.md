@@ -182,7 +182,7 @@ Get list of appointments by `schedule_id`, with `today`, `from time`, `to` time 
 
 Get all forms by template `superform_id`, with `from` time param:
 
-    SuperSaaS\Client::Instance()->forms->list(12345, '2018-01-31 00:00:00'); //=> array(Form, ...)
+    SuperSaaS\Client::Instance()->forms->getList(12345, '2018-01-31 00:00:00'); //=> array(Form, ...)
 
 #### Get Form
 
