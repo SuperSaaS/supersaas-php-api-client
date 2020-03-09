@@ -15,14 +15,14 @@ class Slot extends BaseModel
     public $bookings;
 
     public function __construct ($attributes=array()) {
-        $this->description = $attributes['description'];
-        $this->finish = $attributes['finish'];
+        $this->description = $this->issetAttr($attributes, 'description');
+        $this->finish = $this->issetAttr($attributes, 'finish');
         $this->id = $attributes['id'];
-        $this->location = $attributes['location'];
-        $this->start = $attributes['start'];
-        $this->title = $attributes['title'];
+        $this->location = $this->issetAttr($attributes, 'location');
+        $this->start = $this->issetAttr($attributes, 'start');
+        $this->title = $this->issetAttr($attributes, 'title');
 
-        $this->errors = $attributes['errors'];
+        $this->errors = $this->issetAttr($attributes, 'errors');
 
         if (!empty($attributes['bookings'])) {
             $this->bookings = array();

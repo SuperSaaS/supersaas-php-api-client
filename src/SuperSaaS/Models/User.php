@@ -24,23 +24,23 @@ class User extends BaseModel
     public $form;
 
     public function __construct ($attributes=array()) {
-        $this->address = $attributes['address'];
-        $this->country = $attributes['country'];
+        $this->address = $this->issetAttr($attributes, 'address');
+        $this->country = $this->issetAttr($attributes, 'country');
         $this->createdOn = $attributes['created_on'];
-        $this->credit = $attributes['address'];
-        $this->email = $attributes['email'];
-        $this->field1 = $attributes['field_1'];
-        $this->field2 = $attributes['field_2'];
-        $this->fk = $attributes['fk'];
-        $this->fullName = $attributes['full_name'];
+        $this->credit = $this->issetAttr($attributes, 'address');
+        $this->email = $this->issetAttr($attributes, 'email');
+        $this->field1 = $this->issetAttr($attributes, 'field_1');
+        $this->field2 = $this->issetAttr($attributes, 'field_2');
+        $this->fk = $this->issetAttr($attributes, 'fk');
+        $this->fullName = $this->issetAttr($attributes, 'full_name');
         $this->id = $attributes['id'];
-        $this->mobile = $attributes['mobile'];
+        $this->mobile = $this->issetAttr($attributes, 'mobile');
         $this->name = $attributes['name'];
-        $this->phone = $attributes['phone'];
-        $this->role = $attributes['role'];
-        $this->superField = $attributes['super_field'];
+        $this->phone = $this->issetAttr($attributes, 'phone');
+        $this->role = $this->issetAttr($attributes, 'role');
+        $this->superField = $this->issetAttr($attributes, 'super_field');
 
-        $this->errors = $attributes['errors'];
+        $this->errors = $this->issetAttr($attributes, 'errors');
 
         if (!empty($attributes['form'])) {
             $this->form = new Form($attributes['form']);

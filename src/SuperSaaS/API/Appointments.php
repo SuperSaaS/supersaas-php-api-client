@@ -4,15 +4,16 @@ use SuperSaaS\Models;
 
 class Appointments extends BaseApi
 {
-    public function agenda ($schedule_id, $user_id, $from_time = NULL)
+    public function agenda ($schedule_id, $user_id, $from_time = NULL, $slot=FALSE)
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
             'user' => $this->validatePresent($user_id),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'slot' => empty($slot) ? NULL : TRUE
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res);
+        return $this->mapSlotOrBookings($res, $slot);
     }
 
     public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
@@ -129,14 +130,15 @@ class Appointments extends BaseApi
         return $this->client->delete($path, $query);
     }
 
-    public function changes($schedule_id, $from_time = NULL)
+    public function changes($schedule_id, $from_time = NULL, $slot=FALSE)
     {
         $path = '/changes/' . $this->validateId($schedule_id);
         $query = array(
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'slot' => empty($slot) ? NULL : TRUE
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res);
+        return $this->mapSlotOrBookings($res, $slot);
     }
 
     public function changesSlots ($schedule_id, $from_time = NULL)
@@ -169,6 +171,7 @@ class Appointments extends BaseApi
             $slot = TRUE;
             $res = $res["slots"];
         } elseif (isset($res['bookings'])) {
+            $slot = FALSE;
             $res = $res['bookings'];
         }
         foreach ($res as $attributes) {
