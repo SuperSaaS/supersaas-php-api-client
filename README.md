@@ -117,7 +117,7 @@ Get a single user by `user_id`:
 
 Get all users with optional `form` and `limit`/`offset` pagination params:
 
-    SuperSaaS\Client::Instance()->users->list(date('Y-m-d H:i:s'), 25, 0); //=> array(User, ...)
+    SuperSaaS\Client::Instance()->users->getList(true, 25, 0); //=> array(User, ...)
 
 #### Create Appointment/Booking
 
