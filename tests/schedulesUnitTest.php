@@ -1,10 +1,11 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class SchedulesUnitTest extends PHPUnit_Framework_TestCase
+class SchedulesUnitTest extends TestCase
 {
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $config = new SuperSaas\Configuration;

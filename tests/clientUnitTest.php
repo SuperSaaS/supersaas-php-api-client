@@ -1,10 +1,11 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class ClientUnitTest extends PHPUnit_Framework_TestCase
+class ClientUnitTest extends TestCase
 {
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $config = new SuperSaas\Configuration;
@@ -25,7 +26,7 @@ class ClientUnitTest extends PHPUnit_Framework_TestCase
     public function testRequest() {
         $query = array('test' => 1);
         $params = array();
-        $this->assertNotNull($this->client->request('GET', $params, $query));
+        $this->assertNotNull($this->client->request('GET', '', $params, $query));
     }
 
     public function testInstanceConfiguration() {

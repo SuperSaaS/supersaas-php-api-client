@@ -1,10 +1,11 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
+class AppointmentsUnitTest extends TestCase
 {
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $config = new SuperSaas\Configuration;
@@ -75,8 +76,6 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($this->client->appointments->delete(12345, 67890));
     }
 
-
-
     private function appointmentAttributes() {
         return array(
             'description' => 'Testing.',
@@ -91,7 +90,12 @@ class AppointmentsUnitTest extends PHPUnit_Framework_TestCase
             'field_2' => 'f 2',
             'field_1_r' => 'f 1 r',
             'field_2_r' => 'f 2 r',
-            'super_field' => 'sf'
+            'super_field' => 'sf',
+            'start' => '67810',
+            'finish' => '67890',
+            'resource_id' => '2',
+            'slot_id' => '3',
+            'webhook' => '100'
         );
     }
 }

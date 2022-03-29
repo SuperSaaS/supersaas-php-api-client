@@ -17,9 +17,9 @@ class Form extends BaseModel
         $this->content = $this->issetAttr($attributes, 'content');
         $this->createdOn = $this->issetAttr($attributes, 'created_on');
         $this->deleted = $this->issetAttr($attributes, 'deleted');
-        $this->id = $attributes['id'];
+        $this->id = $this->issetAttr($attributes, 'id');
         $this->reservationProcessId = $this->issetAttr($attributes, 'reservation_process_id');
-        $this->superFormId = $attributes['super_form_id'];
+        $this->superFormId = $this->issetAttr($attributes, 'super_form_id');
         $this->uniq = $this->issetAttr($attributes, 'uniq');
         $this->updatedName = $this->issetAttr($attributes, 'updated_name');
         $this->updatedOn = $this->issetAttr($attributes, 'updated_on');
