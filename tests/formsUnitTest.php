@@ -1,10 +1,11 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class FormsUnitTest extends PHPUnit_Framework_TestCase
+class FormsUnitTest extends TestCase
 {
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $config = new SuperSaas\Configuration;

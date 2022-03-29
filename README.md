@@ -218,6 +218,11 @@ For additional troubleshooting, the client can be configured with the `verbose` 
 
     SuperSaaS\Client::Instance()->verbose = TRUE;
 
+## Run internal unit tests (phpunit)
+
+    ./vendor/bin/phpunit # Runs all
+    ./vendor/bin/phpunit --filter AppointmentsUnitTest # Run selection
+
 ## Additional Information
 
 + [SuperSaaS Registration](https://www.supersaas.com/accounts/new)
