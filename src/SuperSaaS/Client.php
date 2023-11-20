@@ -113,6 +113,7 @@ class Client
      * @throws SSS_Exception
      */
     public function request ($http_method, $path, $params = array(), $query = array()) {
+        $this->throttle();
         if (empty($this->account_name))
         {
             throw new SSS_Exception("Account name not configured. Call `SuperSaaS_Client.configure`.");
@@ -189,6 +190,24 @@ class Client
         } else {
             return array();
         }
+    }
+
+    private $requestQueue = [null, null, null, null];
+    private $windowSize = 1; // Adjust this to set the time window in seconds.
+    private $requestLimit = 4; // Adjust this to set the request limit.
+
+    private function throttle()
+    {
+        // Represents the timestamp of the oldest request within the time window
+        $oldestRequest = array_shift($this->requestQueue);
+
+        // Push the current timestamp into the queue
+        $this->requestQueue[] = time();
+
+        // This ensures that the client does not make requests faster than the defined rate limit
+        if ($oldestRequest !== null && ($timeElapsed = time() - $oldestRequest) < $this->windowSize) {
+            sleep($this->windowSize - $timeElapsed);
+        }    
     }
 
     private function removeEmptyKeys ($arr) {
