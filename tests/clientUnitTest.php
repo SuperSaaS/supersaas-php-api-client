@@ -37,4 +37,20 @@ class ClientUnitTest extends TestCase
         $this->assertEquals(true, SuperSaas\Client::Instance()->verbose);
         $this->assertEquals('host', SuperSaas\Client::Instance()->host);
     }
+
+    public function testRequestThrottle()
+    {
+        if (getenv('RUN_RATE_LIMITER_TEST') !== 'true') {
+            $this->markTestSkipped('Rate limiter test is skipped. Set RUN_RATE_LIMITER_TEST=true to enable it.');
+        }
+        
+        $start = microtime(true);
+
+        for ($i = 0; $i < 25; $i++) {
+            $this->client->request('GET', '/test');
+        }
+
+        $elapsedTime = microtime(true) - $start;
+        $this->assertGreaterThanOrEqual(5.0, $elapsedTime, "Elapsed time between requests should be greater than or equal to 5.0 seconds.");
+    }
 }
