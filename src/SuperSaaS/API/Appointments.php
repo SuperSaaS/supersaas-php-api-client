@@ -1,59 +1,78 @@
 <?php namespace SuperSaaS\API;
 
 use SuperSaaS\Models;
+use SuperSaaS\SSS_Exception;
 
 class Appointments extends BaseApi
 {
-    public function agenda ($schedule_id, $user_id, $from_time = NULL, $slot=FALSE)
+    /**
+     * @throws SSS_Exception
+     */
+    public function agenda($schedule_id, $user_id, $from_time = null, $slot=false): array
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
             'user' => $this->validatePresent($user_id),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
-            'slot' => empty($slot) ? NULL : TRUE
+            'from' => empty($from_time) ? null : $this->validateDatetime($from_time),
+            'slot' => empty($slot) ? null : true
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, $slot);
+        return $this->_mapSlotOrBookings($res, $slot);
     }
 
-    public function agendaSlots ($schedule_id, $user_id, $from_time = NULL)
+    /**
+     * @throws SSS_Exception
+     * One can achieve the same result by using agenda
+     */
+    public function agendaSlots($schedule_id, $user_id, $from_time = null): array
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
             'user' => $this->validatePresent($user_id),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'from' => empty($from_time) ? null : $this->validateDatetime($from_time),
             'slot' => 'true'
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, true);
+        return $this->_mapSlotOrBookings($res, true);
     }
 
-    public function available($schedule_id, $from_time = NULL, $length_minutes = NULL, $resource = NULL, $full = NULL, $limit = NULL)  {
+    /**
+     * @throws SSS_Exception
+     */
+    public function available($schedule_id, $from_time = null, $length_minutes = null, $resource = null, $full = null, $limit = null): array
+    {
         $path = '/free/' . $this->validateId($schedule_id);
         $query = array(
-            'length' => empty($length_minutes) ? NULL : $this->validateNumber($length_minutes),
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
+            'length' => empty($length_minutes) ? null : $this->validateNumber($length_minutes),
+            'from' => empty($from_time) ? null : $this->validateDatetime($from_time),
             'resource' => $resource,
-            'full' => empty($full) ? NULL : 'true',
-            'maxresults' => empty($limit) ? NULL : $this->validateNumber($limit)
+            'full' => empty($full) ? null : 'true',
+            'maxresults' => empty($limit) ? null : $this->validateNumber($limit)
         );
-        $res = $this->client->get( $path, $query);
-        return $this->mapSlotOrBookings($res);
+        $res = $this->client->get($path, $query);
+        return $this->_mapSlotOrBookings($res);
     }
 
-    public function getList($schedule_id, $form=NULL, $start_time=NULL, $limit=NULL) {
+    /**
+     * @throws SSS_Exception
+     */
+    public function getList($schedule_id, $form=null, $start_time=null, $limit=null): array
+    {
         $path = '/bookings';
         $query = array(
             'schedule_id' => $this->validateId($schedule_id),
-            'form' => empty($form) ? NULL : 'true',
-            'limit' => empty($limit) ? NULL : $this->validateNumber($limit),
-            'start' => empty($start_time) ? NULL : $this->validateDatetime($start_time)
+            'form' => empty($form) ? null : 'true',
+            'limit' => empty($limit) ? null : $this->validateNumber($limit),
+            'start' => empty($start_time) ? null : $this->validateDatetime($start_time)
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res);
+        return $this->_mapSlotOrBookings($res);
     }
 
-    public function get($schedule_id, $appointment_id)
+    /**
+     * @throws SSS_Exception
+     */
+    public function get($schedule_id, $appointment_id): Models\Appointment
     {
         $params = array('schedule_id' => $this->validateId($schedule_id));
         $path = '/bookings/' . $this->validateId($appointment_id);
@@ -61,14 +80,17 @@ class Appointments extends BaseApi
         return new Models\Appointment($res);
     }
 
-    public function create($schedule_id, $attributes, $user_id, $form=NULL, $webhook=NULL)
+    /**
+     * @throws SSS_Exception
+     */
+    public function create($schedule_id, $attributes, $user_id, $form=null, $webhook=null)
     {
         $path = '/bookings';
-        $query = array('webhook' => empty($webhook) ? NULL : 'true');
+        $query = array('webhook' => empty($webhook) ? null : 'true');
         $params = array(
             'schedule_id' => $this->validateId($schedule_id),
-            'user_id' => empty($user_id) ? NULL : $this->validateId($user_id),
-            'form' => empty($form) ? NULL : 'true',
+            'user_id' => empty($user_id) ? null : $this->validateId($user_id),
+            'form' => empty($form) ? null : 'true',
             'booking' => array(
                 'start' => $attributes['start'],
                 'finish' => $attributes['finish'],
@@ -88,17 +110,19 @@ class Appointments extends BaseApi
                 'slot_id' => $attributes['slot_id']
             )
         );
-        $res = $this->client->post($path, $params, $query);
-        return new Models\Appointment($res);
+        return $this->client->post($path, $params, $query);
     }
 
-    public function update($schedule_id, $appointment_id, $attributes, $form=NULL, $webhook=NULL)
+    /**
+     * @throws SSS_Exception
+     */
+    public function update($schedule_id, $appointment_id, $attributes, $form=null, $webhook=null)
     {
         $path = '/bookings/' . $this->validateId($appointment_id);
-        $query = array('webhook' => empty($webhook) ? NULL : 'true');
+        $query = array('webhook' => empty($webhook) ? null : 'true');
         $params = array(
-            'schedule_id' => $schedule_id,
-            'form' => empty($form) ? NULL : 'true',
+            'schedule_id' => $this->validateId($schedule_id),
+            'form' => empty($form) ? null : 'true',
             'webhook' => $attributes['webhook'],
             'booking' => array(
                 'start' => $attributes['start'],
@@ -119,68 +143,145 @@ class Appointments extends BaseApi
                 'slot_id' => $attributes['slot_id']
             )
         );
-        $res = $this->client->post($path, $params, $query);
-        return new Models\Appointment($res);
+        $params['booking'] = array_filter(
+            $params['booking'], function ($value) {
+                return $value !== null;
+            }
+        );
+        return $this->client->post($path, $params, $query);
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function delete($schedule_id, $appointment_id)
     {
-        $path = '/bookings/' . $this->validateId($appointment_id);
+        $path = sprintf("/bookings/%s", $this->validateId($appointment_id));
         $query = array('schedule_id' => $schedule_id);
         return $this->client->delete($path, $query);
     }
 
-    public function changes($schedule_id, $from_time = NULL, $slot=FALSE)
+    /**
+     * @throws SSS_Exception
+     */
+    public function changes($schedule_id, $from_time = null, $to=null, $slot=false, $user=null, $limit=null, $offset=null): array
     {
         $path = '/changes/' . $this->validateId($schedule_id);
-        $query = array(
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
-            'slot' => empty($slot) ? NULL : TRUE
-        );
+        $query = $this->buildParam([], $from_time, $to, $slot, $user, $limit, $offset);
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, $slot);
+        return $this->_mapSlotOrBookings($res, $slot);
     }
 
-    public function changesSlots ($schedule_id, $from_time = NULL)
+    /**
+     * @throws SSS_Exception
+     */
+    public function changesSlots($schedule_id, $from_time = null): array
     {
         $path = '/changes/' . $this->validateId($schedule_id);
         $query = array(
             'slot' => 'true',
-            'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time)
+            'from' => empty($from_time) ? null : $this->validateDatetime($from_time)
         );
         $res = $this->client->get($path, $query);
-        return $this->mapSlotOrBookings($res, true);
+        return $this->_mapSlotOrBookings($res, true);
     }
 
-    public function listAppointments ($schedule_id, $today=FALSE, $from_time = NULL, $to = NULL, $slot = FALSE)
-        {
-            $path = '/range/' . $this->validateId($schedule_id);
-            $query = array(
-                'today' => $today ? $today : NULL,
-                'from' => empty($from_time) ? NULL : $this->validateDatetime($from_time),
-                'to' => empty($to) ? NULL : $this->validateDatetime($to),
-                'slot' => $slot ? $slot : NULL,
-            );
-            $res = $this->client->get($path, $query);
-            return $this->mapSlotOrBookings($res);
+    /**
+     * @throws SSS_Exception
+     */
+    public function range($scheduleId, $today = false, $fromTime = null, $to = null, $slot = false, $user = null, $resourceId = null, $serviceId = null, $limit = null, $offset = null): array
+    {
+        $path = "/range/" . $this->validateId($scheduleId);
+        $params = [];
+
+        $params = $this->buildParam($params, $fromTime, $to, $slot, $user, $limit, $offset, $resourceId, $serviceId);
+        if ($today) {
+            $params['today'] = true;
         }
 
-    private function mapSlotOrBookings($res, $slot = FALSE) {
-        $arr = array();
-        if (isset($res["slots"])) {
-            $slot = TRUE;
-            $res = $res["slots"];
-        } elseif (isset($res['bookings'])) {
-            $slot = FALSE;
-            $res = $res['bookings'];
-        }
-        foreach ($res as $attributes) {
+        $response = $this->client->get($path, $params);
+
+        return $this->_mapSlotOrBookings($response);
+    }
+
+    /**
+     * @throws SSS_Exception, recommended to use range function
+     */
+    public function listAppointments($schedule_id, $today=false, $from_time = null, $to = null, $slot = false): array
+    {
+            $path = '/range/' . $this->validateId($schedule_id);
+            $query = array(
+                'today' => $today ? $today : null,
+                'from' => empty($from_time) ? null : $this->validateDatetime($from_time),
+                'to' => empty($to) ? null : $this->validateDatetime($to),
+                'slot' => $slot ? $slot : null,
+            );
+            $res = $this->client->get($path, $query);
+            return $this->_mapSlotOrBookings($res);
+    }
+
+    private function _mapSlotOrBookings($obj, $slot=false): array
+    {
+        if (isset($obj['slots'])) {
+            return array_map(
+                function ($attributes) {
+                    return new Models\Slot($attributes);
+                }, $obj['slots']
+            );
+        } else if (isset($obj['bookings'])) {
+            return array_map(
+                function ($attributes) {
+                    return new Models\Appointment($attributes);
+                }, $obj['bookings']
+            );
+        } else if (is_array($obj)) {
             if ($slot) {
-                $arr[] = new Models\Slot($attributes);
+                return array_map(
+                    function ($attributes) {
+                        return new Models\Slot($attributes);
+                    }, $obj
+                );
             } else {
-                $arr[] = new Models\Appointment($attributes);
+                return array_map(
+                    function ($attributes) {
+                        return new Models\Appointment($attributes);
+                    }, $obj
+                );
             }
+        } else {
+            return [];
         }
-        return $arr;
+    }
+
+    /**
+     * @throws SSS_Exception
+     */
+    function buildParam($params, $fromTime, $to, $slot, $user, $limit, $offset, $resourceId = null, $serviceId = null)
+    {
+        if ($fromTime) {
+            $params['from'] = $this->validateDatetime($fromTime);
+        }
+        if ($to) {
+            $params['to'] = $this->validateDatetime($to);
+        }
+        if ($slot) {
+            $params['slot'] = 'true';
+        }
+        if ($user !== null) {
+            $params['user'] = $this->validateUser($user);
+        }
+        if ($limit) {
+            $params['limit'] = $this->validateNumber($limit);
+        }
+        if ($offset) {
+            $params['offset'] = $this->validateNumber($offset);
+        }
+        if ($resourceId !== null) {
+            $params['resource_id'] = $this->validateId($resourceId);
+        }
+        if ($serviceId !== null) {
+            $params['service_id'] = $this->validateId($serviceId);
+        }
+        return $params;
     }
 }

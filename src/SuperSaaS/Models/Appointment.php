@@ -23,7 +23,6 @@ class Appointment extends BaseModel
     public $price;
     public $resName;
     public $resourceId;
-    public $role;
     public $scheduleId;
     public $scheduleName;
     public $serviceId;
@@ -47,7 +46,8 @@ class Appointment extends BaseModel
      */
     public $slot;
 
-    public function __construct ($attributes=array()) {
+    public function __construct($attributes=array())
+    {
         $this->address = $this->issetAttr($attributes, 'address');
         $this->country = $this->issetAttr($attributes, 'country');
         $this->createdBy = $this->issetAttr($attributes, 'created_by');
@@ -69,7 +69,6 @@ class Appointment extends BaseModel
         $this->price = $this->issetAttr($attributes, 'price');
         $this->resName = $this->issetAttr($attributes, 'res_name');
         $this->resourceId = $this->issetAttr($attributes, 'resource_id');
-        $this->role = $this->issetAttr($attributes, 'role');
         $this->scheduleId = $this->issetAttr($attributes, 'schedule_id');
         $this->scheduleName = $this->issetAttr($attributes, 'schedule_name');
         $this->serviceId = $this->issetAttr($attributes, 'service_id');

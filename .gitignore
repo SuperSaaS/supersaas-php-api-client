@@ -4,3 +4,4 @@
 .DS_Store
 composer.phar
 build/*
+.phpunit.result.cache

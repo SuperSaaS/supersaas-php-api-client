@@ -13,11 +13,12 @@ class Form extends BaseModel
     public $updatedOn;
     public $userId;
 
-    public function __construct ($attributes=array()) {
+    public function __construct($attributes=array())
+    {
+        $this->id = $this->issetAttr($attributes, 'id');
         $this->content = $this->issetAttr($attributes, 'content');
         $this->createdOn = $this->issetAttr($attributes, 'created_on');
         $this->deleted = $this->issetAttr($attributes, 'deleted');
-        $this->id = $this->issetAttr($attributes, 'id');
         $this->reservationProcessId = $this->issetAttr($attributes, 'reservation_process_id');
         $this->superFormId = $this->issetAttr($attributes, 'super_form_id');
         $this->uniq = $this->issetAttr($attributes, 'uniq');

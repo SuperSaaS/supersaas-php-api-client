@@ -1,5 +1,4 @@
-<?php
-use PHPUnit\Framework\TestCase;
+<?php use PHPUnit\Framework\TestCase;
 
 class FormsUnitTest extends TestCase
 {
@@ -23,5 +22,9 @@ class FormsUnitTest extends TestCase
 
     public function testGet() {
         $this->assertNotNull($this->client->forms->get(12345));
+    }
+
+    public function testForms() {
+        $this->assertNotNull($this->client->forms->forms());
     }
 }

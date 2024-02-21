@@ -72,6 +72,11 @@ class AppointmentsUnitTest extends TestCase
             $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from));
         }
 
+    public function testRange() {
+        $to = $from = date('Y-m-d H:i:s');
+        $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from, $to, false, null, null, null, null, null));
+    }
+
     public function testDelete() {
         $this->assertNotNull($this->client->appointments->delete(12345, 67890));
     }

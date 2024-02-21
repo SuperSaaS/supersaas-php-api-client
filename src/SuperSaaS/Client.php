@@ -1,65 +1,82 @@
 <?php namespace SuperSaaS;
 
-use SuperSaaS\API;
-use SuperSaaS\SSS_Exception;
+use AllowDynamicProperties;
+use SuperSaaS\API\Appointments;
+use SuperSaaS\API\Forms;
+use SuperSaaS\API\Groups;
+use SuperSaaS\API\Promotions;
+use SuperSaaS\API\Schedules;
+use SuperSaaS\API\Users;
 
+//use SuperSaaS\API;
+//use SuperSaaS\SSS_Exception;
+//use SuperSaaS\RateLimiter;
 
-class Client
+/**
+ * @property array $lastRequest
+ */
+#[AllowDynamicProperties] class Client
 {
-    const API_VERSION = "2";
-    const VERSION = "1.1.2";
+    const API_VERSION = "3";
+    const VERSION = "2.0.0";
 
     /**
      * @var string
      */
-    public $account_name;
+    public string|array|false $account_name;
 
     /**
      * @var string
      */
-    public $api_key;
+    public string|array|false $api_key;
 
     /**
      * @var string
      */
-    public $host;
+    public string|array|false $host;
 
     /**
      * @var bool
      */
-    public $verbose;
+    public bool $verbose;
 
     /**
      * @var bool
      */
-    public $dry_run;
+    public bool $dry_run;
 
     /**
-     * @var \SuperSaaS\API\Appointments
+     * @var Appointments
      */
-    public $appointments;
+    public Appointments $appointments;
 
     /**
-     * @var \SuperSaaS\API\Forms
+     * @var Forms
      */
-    public $forms;
+    public Forms $forms;
 
     /**
-     * @var \SuperSaaS\API\Schedules
+     * @var Schedules
      */
-    public $schedules;
+    public Schedules $schedules;
 
     /**
-     * @var \SuperSaaS\API\Users
+     * @var Users
      */
-    public $users;
+    public Users $users;
 
     /**
-     * @var array
+     * @var Groups
      */
-    public $lastRequest = array();
+    public Groups $groups;
 
-    public static function Instance()
+    /**
+     * @var Promotions
+     */
+    public Promotions $promotions;
+
+
+    public static function instance(): ?Client
     {
         static $instance = null;
         if ($instance === null) {
@@ -68,15 +85,16 @@ class Client
         return $instance;
     }
 
-    public static function configure($account_name, $api_key, $dry_run=FALSE, $verbose=FALSE, $host=Configuration::DEFAULT_HOST) {
-        self::Instance()->account_name = $account_name;
-        self::Instance()->api_key = $api_key;
-        self::Instance()->dry_run = $dry_run;
-        self::Instance()->verbose = $verbose;
-        self::Instance()->host = $host;
+    public static function configure($account_name, $api_key, $dry_run=false, $verbose=false, $host=Configuration::DEFAULT_HOST): void
+    {
+        self::instance()->account_name = $account_name;
+        self::instance()->api_key = $api_key;
+        self::instance()->dry_run = $dry_run;
+        self::instance()->verbose = $verbose;
+        self::instance()->host = $host;
     }
 
-    public function __construct ($configuration=NULL)
+    public function __construct($configuration=null)
     {
         if (!$configuration) {
             $configuration = new Configuration();
@@ -91,38 +109,57 @@ class Client
         $this->forms = new API\Forms($this);
         $this->schedules = new API\Schedules($this);
         $this->users = new API\Users($this);
+        $this->groups = new API\Groups($this);
+        $this->promotions = new API\Promotions($this);
     }
 
-    public function get ($path, $query = array()) {
+    /**
+     * @throws SSS_Exception
+     */
+    public function get($path, $query = array())
+    {
         return $this->request("GET", $path, array(), $query);
     }
 
-    public function post ($path, $params = array(), $query = array()) {
+    /**
+     * @throws SSS_Exception
+     */
+    public function post($path, $params = array(), $query = array())
+    {
         return $this->request("POST", $path, $params, $query);
     }
 
-    public function put ($path, $params = array(), $query = array()) {
+    /**
+     * @throws SSS_Exception
+     */
+    public function put($path, $params = array(), $query = array())
+    {
         return $this->request("PUT", $path, $params, $query);
     }
 
-    public function delete ($path, $params = array(), $query = array()) {
+    /**
+     * @throws SSS_Exception
+     */
+    public function delete($path, $params = array(), $query = array())
+    {
         return $this->request("DELETE", $path, $params, $query);
     }
 
     /**
      * @throws SSS_Exception
      */
-    public function request ($http_method, $path, $params = array(), $query = array()) {
-        if (empty($this->account_name))
-        {
+    public function request($http_method, $path, $params = array(), $query = array())
+    {
+
+        RateLimiter::throttle();
+        if (empty($this->account_name)) {
             throw new SSS_Exception("Account name not configured. Call `SuperSaaS_Client.configure`.");
         }
-        if (empty($this->api_key))
-        {
+        if (empty($this->api_key)) {
             throw new SSS_Exception("Account api key not configured. Call `SuperSaaS_Client.configure`.");
         }
-        $params = $this->removeEmptyKeys($params);
-        $query = $this->removeEmptyKeys($query);
+        $params = $this->_removeEmptyKeys($params);
+        $query = $this->_removeEmptyKeys($query);
 
         $params['account_name'] = $this->account_name;
 
@@ -131,7 +168,7 @@ class Client
         }
 
         if ($this->verbose) {
-            echo "\n\n".var_dump($query)."\n\n";
+            echo PHP_EOL . var_dump($query) . PHP_EOL;
         }
 
         $url = $this->host . "/api" . $path . ".json";
@@ -145,7 +182,7 @@ class Client
                 'Authorization: Basic ' . base64_encode($this->account_name . ':' . $this->api_key),
                 'Accept: application/json',
                 'Content-Type: application/json',
-                'User-Agent: ' . $this->userAgent(),
+                'User-Agent: ' . $this->_userAgent(),
             ),
             'ignore_errors' => true,
         );
@@ -153,12 +190,13 @@ class Client
             $http['content'] = json_encode($params);
         }
 
+
         if ($this->verbose) {
-            echo("### SuperSaaS Client Request:\n\r");
-            echo($http_method . " " . $url."\n\r");
-            echo("DATA:\n\r");
-            $this->printArray($params);
-            echo("------------------------------\n\r");
+            echo("### SuperSaaS Client Request:" . PHP_EOL);
+            echo($http_method . " " . $url . PHP_EOL);
+            echo("DATA:" . PHP_EOL);
+            $this->_printArray($params);
+            echo("------------------------------" . PHP_EOL);
         }
 
         $this->lastRequest = $http;
@@ -168,35 +206,50 @@ class Client
 
         $req = stream_context_create(array('http' => $http));
         $res = @file_get_contents($url, false, $req);
-        $statusCode = $this->httpStatusCode($http_response_header);
+        $statusCode = $this->_httpStatusCode($http_response_header);
 
         if ($statusCode < 200 || $statusCode > 299) {
             if ($this->verbose) {
-                echo("Error Response (" . $statusCode . "):\n\r");
-                echo($res."\n\r");
-                echo("==============================\n\r");
+                echo("Error Response (" . $statusCode . "):" . PHP_EOL);
+                echo($res . PHP_EOL);
+                echo("==============================" . PHP_EOL);
             }
-            throw new SSS_Exception("HTTP Request Error " . $url);
+            throw new SSS_Exception("HTTP Request Error: {$statusCode} " . $url);
         } else if (!empty($res)) {
             if ($this->verbose) {
-                echo("Response:\n\r");
-                echo($res."\n\r");
-                echo("==============================\n\r");
+                echo("Response:" . PHP_EOL);
+                echo($res . PHP_EOL);
+                echo("==============================" . PHP_EOL);
             }
 
-            $obj = json_decode($res, TRUE);
+            $obj = json_decode($res, true);
             return $obj;
         } else {
-            return array();
+            return $this->_findLocation($http_response_header);
         }
     }
 
-    private function removeEmptyKeys ($arr) {
+    private function _findLocation($array): array|string
+    {
+        foreach ($array as $line) {
+            if (str_contains($line, 'location:')) {
+                $parts = explode(':', $line, 2);  // Split at the first colon
+                if (count($parts) === 2) {
+                    return trim($parts[1]); // Return the location URL, trimmed for spaces
+                }
+            }
+        }
+
+        return array(); //no location
+    }
+
+    private function _removeEmptyKeys($arr): array
+    {
         $valueArr = array();
         foreach ($arr as $key=>$val) {
-            if ($val !== NULL && $val !== "") {
-                if ($this->isAssociativeArray($val)) {
-                    $val = $this->removeEmptyKeys($val);
+            if ($val !== null && $val !== "") {
+                if ($this->_isAssociativeArray($val)) {
+                    $val = $this->_removeEmptyKeys($val);
                 }
                 $valueArr[$key] = $val;
             }
@@ -204,11 +257,12 @@ class Client
         return $valueArr;
     }
 
-    private function userAgent () {
+    private function _userAgent()
+    {
         return "SSS/" . self::VERSION . " PHP/" . phpversion() . " API/" . self::API_VERSION;
     }
 
-    private function isAssociativeArray($arr)
+    private function _isAssociativeArray($arr)
     {
         if (is_array($arr)) {
             return count(array_filter(array_keys($arr), 'is_string')) > 0;
@@ -217,20 +271,22 @@ class Client
         }
     }
 
-    private function httpStatusCode($headers)
+    private function _httpStatusCode($headers): int
     {
-        if(is_array($headers))
-        {
-            $parts = explode(' ',$headers[0]);
-            if(count($parts) > 1)
+        if (is_array($headers)) {
+            $parts = explode(' ', $headers[0]);
+            print_r($parts);
+            if (count($parts) > 1) {
                 return intval($parts[1]);
+            }
         }
         return 0;
     }
 
-    private function printArray($arr) {
+    private function _printArray($arr): void
+    {
         foreach ($arr as $key => $val) {
-            if ($this->isAssociativeArray($val)) {
+            if ($this->_isAssociativeArray($val)) {
                 echo "  $key:\n";
                 foreach ($val as $key2 => $val2) {
                     echo "    $key2 = $val2\n";
