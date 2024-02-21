@@ -23,7 +23,11 @@ class User extends BaseModel
      */
     public $form;
 
-    public function __construct ($attributes=array()) {
+    /**
+     * @param $attributes
+     */
+    public function __construct($attributes=array())
+    {
         $this->address = $this->issetAttr($attributes, 'address');
         $this->country = $this->issetAttr($attributes, 'country');
         $this->createdOn = $this->issetAttr($attributes, 'created_on');

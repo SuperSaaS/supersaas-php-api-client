@@ -35,7 +35,7 @@ class UsersUnitTest extends TestCase
     }
 
     public function testUpdate() {
-        $this->assertNotNull($this->client->users->update(12345, $this->userAttributes(), true));
+        $this->assertNotNull($this->client->users->update(12345, $this->userAttributes(), true, 'error'));
     }
 
     public function testDelete() {

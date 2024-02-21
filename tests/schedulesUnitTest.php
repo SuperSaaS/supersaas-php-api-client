@@ -23,4 +23,8 @@ class SchedulesUnitTest extends TestCase
     public function testResources() {
         $this->assertNotNull($this->client->schedules->resources(12345));
     }
+
+    public function testFieldList() {
+        $this->assertNotNull($this->client->schedules->fieldList(12345));
+    }
 }
