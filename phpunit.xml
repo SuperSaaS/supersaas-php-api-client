@@ -1,6 +1,5 @@
 <testsuites>
-  <testsuite name="unit">
-    <directory>tests</directory>
-    <directory suffix=".php">src</directory>
-  </testsuite>
+    <testsuite name="unit">
+        <directory suffix="Test.php">tests</directory>
+    </testsuite>
 </testsuites>

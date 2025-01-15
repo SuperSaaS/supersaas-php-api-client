@@ -24,10 +24,13 @@ class Users extends BaseApi
         return $arr;
     }
 
-    public function get($user_id): Models\User
+    public function get($user_id, $form=null): Models\User
     {
         $path = $this->_userPath($user_id);
-        $res = $this->client->get($path);
+        $query = array(
+            'form' => empty($form) ? null : 'true'
+        );
+        $res = $this->client->get($path, $query);
         return new Models\User($res);
     }
 
@@ -60,7 +63,8 @@ class Users extends BaseApi
                 'field_2' => $attributes['field_2'],
                 'super_field' => $attributes['super_field'],
                 'credit' => isset($attributes['credit']) ? $this->validateNumber($attributes['credit']) : null,
-                'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null
+                'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null,
+                'group' => isset($attributes['group']) ? $this->validateNumber($attributes['group']) : null
             )
         );
         return $this->client->post($path, $params, $query);
@@ -91,7 +95,8 @@ class Users extends BaseApi
                 'field_2' => $attributes['field_2'],
                 'super_field' => $attributes['super_field'],
                 'credit' => isset($attributes['credit']) ? $this->validateNumber($attributes['credit']) : null,
-                'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null
+                'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null,
+                'group' => isset($attributes['group']) ? $this->validateNumber($attributes['group']) : null
             )
         );
 
@@ -104,10 +109,11 @@ class Users extends BaseApi
         return $this->client->put($path, $params, $query);
     }
 
-    public function delete($user_id)
+    public function delete($user_id, $webhook=null)
     {
         $path = $this->_userPath($this->validateId($user_id));
-        return $this->client->delete($path);
+        $query = array('webhook' => empty($webhook) ? null : 'true');
+        return $this->client->delete($path, $query);
     }
 
     public function fieldList(): array

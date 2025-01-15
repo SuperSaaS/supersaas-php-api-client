@@ -8,7 +8,7 @@ class Forms extends BaseApi
     /**
      * @throws SSS_Exception
      */
-    public function getList($form_id, $from_time = null, $user = null): array
+    public function getList($form_id, $from_time = null, $user = null, $limit = null, $offset = null): array
     {
         $path = "/forms";
         $query = array('form_id' => $this->validateId($form_id));
@@ -17,6 +17,12 @@ class Forms extends BaseApi
         }
         if ($user || $user == 0) {
             $query['user'] = $this->validateUser($user);
+        }
+        if ($limit) {
+            $query['limit'] = $this->validateNumber($limit);
+        }
+        if ($offset) {
+            $query['offset'] = $this->validateNumber($offset);
         }
         $res = $this->client->get($path, $query);
         $arr = array();

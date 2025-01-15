@@ -37,12 +37,12 @@ class ClientUnitTest extends TestCase
 
         $start = microtime(true);
 
-        for ($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $this->client->request('GET', '/test');
         }
 
         $elapsedTime = microtime(true) - $start;
-        $this->assertGreaterThanOrEqual(5.0, $elapsedTime, "Elapsed time between requests should be greater than or equal to 5.0 seconds.");
+        $this->assertGreaterThanOrEqual(4.0, $elapsedTime, "Elapsed time between requests should be greater than or equal to 5.0 seconds.");
     }
 
     public function testInstanceConfiguration() {

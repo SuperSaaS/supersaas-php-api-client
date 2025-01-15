@@ -8,11 +8,11 @@ class Appointments extends BaseApi
     /**
      * @throws SSS_Exception
      */
-    public function agenda($schedule_id, $user_id, $from_time = null, $slot=false): array
+    public function agenda($schedule_id, $user, $from_time = null, $slot=false): array
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
-            'user' => $this->validatePresent($user_id),
+            'user' => $this->validatePresent($user),
             'from' => empty($from_time) ? null : $this->validateDatetime($from_time),
             'slot' => empty($slot) ? null : true
         );
@@ -24,7 +24,8 @@ class Appointments extends BaseApi
      * @throws SSS_Exception
      * One can achieve the same result by using agenda
      */
-    public function agendaSlots($schedule_id, $user_id, $from_time = null): array
+    // LEGACY METHOD WILL BE REMOVED IN THE FUTURE, USE AGENDA ABOVE
+     public function agendaSlots($schedule_id, $user_id, $from_time = null): array
     {
         $path = '/agenda/' . $this->validateId($schedule_id);
         $query = array(
@@ -56,14 +57,15 @@ class Appointments extends BaseApi
     /**
      * @throws SSS_Exception
      */
-    public function getList($schedule_id, $form=null, $start_time=null, $limit=null): array
+    public function getList($schedule_id, $form=null, $start_time=null, $limit=null, $finish=null): array
     {
         $path = '/bookings';
         $query = array(
             'schedule_id' => $this->validateId($schedule_id),
             'form' => empty($form) ? null : 'true',
             'limit' => empty($limit) ? null : $this->validateNumber($limit),
-            'start' => empty($start_time) ? null : $this->validateDatetime($start_time)
+            'start' => empty($start_time) ? null : $this->validateDatetime($start_time),
+            'finish' => empty($finish) ? null : $this->validateDatetime($finish)
         );
         $res = $this->client->get($path, $query);
         return $this->_mapSlotOrBookings($res);
@@ -94,7 +96,6 @@ class Appointments extends BaseApi
             'booking' => array(
                 'start' => $attributes['start'],
                 'finish' => $attributes['finish'],
-                'name' => $attributes['name'],
                 'email' => $attributes['email'],
                 'full_name' => $attributes['full_name'],
                 'address' => $attributes['address'],
@@ -127,7 +128,6 @@ class Appointments extends BaseApi
             'booking' => array(
                 'start' => $attributes['start'],
                 'finish' => $attributes['finish'],
-                'name' => $attributes['name'],
                 'email' => $attributes['email'],
                 'full_name' => $attributes['full_name'],
                 'address' => $attributes['address'],
@@ -154,20 +154,22 @@ class Appointments extends BaseApi
     /**
      * @throws SSS_Exception
      */
-    public function delete($schedule_id, $appointment_id)
+    public function delete($schedule_id, $appointment_id, $webhook = null)
     {
         $path = sprintf("/bookings/%s", $this->validateId($appointment_id));
-        $query = array('schedule_id' => $schedule_id);
+        $query = array('schedule_id' => $schedule_id,
+                'webhook' => empty($webhook) ? null : 'true'
+        );
         return $this->client->delete($path, $query);
     }
 
     /**
      * @throws SSS_Exception
      */
-    public function changes($schedule_id, $from_time = null, $to=null, $slot=false, $user=null, $limit=null, $offset=null): array
+    public function changes($schedule_id, $from = null, $to=null, $slot=false, $user=null, $limit=null, $offset=null): array
     {
         $path = '/changes/' . $this->validateId($schedule_id);
-        $query = $this->buildParam([], $from_time, $to, $slot, $user, $limit, $offset);
+        $query = $this->buildParam([], $from, $to, $slot, $user, $limit, $offset);
         $res = $this->client->get($path, $query);
         return $this->_mapSlotOrBookings($res, $slot);
     }
@@ -175,6 +177,7 @@ class Appointments extends BaseApi
     /**
      * @throws SSS_Exception
      */
+    // LEGACY METHOD WILL BE REMOVED IN THE FUTURE, USE CHANGES
     public function changesSlots($schedule_id, $from_time = null): array
     {
         $path = '/changes/' . $this->validateId($schedule_id);
