@@ -89,6 +89,7 @@ Get all services/resources by `schedule_id`:
 
 _Note: does not work for capacity type schedules._
 
+
 #### List Fields of a Schedule
 
 Get all the available fields of a schedule by `schedule_id`:
