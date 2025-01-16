@@ -63,12 +63,8 @@ class Users extends BaseApi
                 'field_2' => $attributes['field_2'],
                 'super_field' => $attributes['super_field'],
                 'credit' => isset($attributes['credit']) ? $this->validateNumber($attributes['credit']) : null,
-<<<<<<< HEAD
                 'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null,
                 'group' => isset($attributes['group']) ? $this->validateNumber($attributes['group']) : null
-=======
-                'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null
->>>>>>> master
             )
         );
         return $this->client->post($path, $params, $query);

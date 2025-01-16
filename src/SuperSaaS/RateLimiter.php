@@ -1,26 +1,33 @@
-<?php namespace SuperSaaS;
+<?php 
+namespace SuperSaaS;
 
-class RateLimiter
-{
-    private static int $_windowSize = 1; // 1 second between requests
-    private static int $_maxPerWindow = 1;
-    private static ?float $_lastRequestTime = null;
+class RateLimiter {
+    private const WINDOW_SIZE = 1;
+    private const MAX_REQUESTS = 4;
+    private static $queue = [];
 
     /**
      * @return void
      */
-    public static function throttle(): void
+    public static function throttle(): void 
     {
-        $now = microtime(true);
-
-        if (self::$_lastRequestTime !== null) {
-            $timeSinceLastRequest = $now - self::$_lastRequestTime;
-            if ($timeSinceLastRequest < self::$_windowSize) {
-                $sleepTime = (self::$_windowSize - $timeSinceLastRequest) * 1000000;
-                usleep($sleepTime);
-            }
+        self::$queue[] = microtime(true);
+        
+        if (count(self::$queue) > self::MAX_REQUESTS) {
+            array_shift(self::$queue);
         }
 
-        self::$_lastRequestTime = microtime(true);
+        if (count(self::$queue) < self::MAX_REQUESTS) {
+            return;
+        }
+
+        $oldestRequest = reset(self::$queue);
+
+        $elapsed = microtime(true) - $oldestRequest;
+
+        if ($elapsed < self::WINDOW_SIZE) {
+            $sleepTime = self::WINDOW_SIZE - $elapsed;
+            usleep((int)($sleepTime * 1000000));
+        }
     }
 }

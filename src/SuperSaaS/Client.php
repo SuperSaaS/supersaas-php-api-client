@@ -9,8 +9,9 @@ use SuperSaaS\API\Schedules;
 use SuperSaaS\API\Users;
 
 //use SuperSaaS\API;
-//use SuperSaaS\SSS_Exception;
-//use SuperSaaS\RateLimiter;
+use SuperSaaS\Configuration;
+use SuperSaaS\SSS_Exception;
+use SuperSaaS\RateLimiter;
 
 /**
  * @property array $lastRequest
