@@ -5,7 +5,6 @@ class Appointment extends BaseModel
     public $address;
     public $country;
     public $createdBy;
-    public $description;
     public $createdOn;
     public $deleted;
     public $email;
@@ -18,7 +17,6 @@ class Appointment extends BaseModel
     public $fullName;
     public $id;
     public $mobile;
-    public $name;
     public $phone;
     public $price;
     public $resName;
@@ -35,6 +33,9 @@ class Appointment extends BaseModel
     public $updatedOn;
     public $userId;
     public $waitlisted;
+    public $priceCents;
+    public $quantity;
+    public $statusMessage;
 
     /**
      * @var \SuperSaaS\Models\Form
@@ -51,7 +52,6 @@ class Appointment extends BaseModel
         $this->address = $this->issetAttr($attributes, 'address');
         $this->country = $this->issetAttr($attributes, 'country');
         $this->createdBy = $this->issetAttr($attributes, 'created_by');
-        $this->description = $this->issetAttr($attributes, 'description');
         $this->createdOn = $this->issetAttr($attributes, 'created_on');
         $this->deleted = $this->issetAttr($attributes, 'deleted');
         $this->email = $this->issetAttr($attributes, 'email');
@@ -64,7 +64,6 @@ class Appointment extends BaseModel
         $this->fullName = $this->issetAttr($attributes, 'full_name');
         $this->id = $this->issetAttr($attributes, 'id');
         $this->mobile = $this->issetAttr($attributes, 'mobile');
-        $this->name = $this->issetAttr($attributes, 'name');
         $this->phone = $this->issetAttr($attributes, 'phone');
         $this->price = $this->issetAttr($attributes, 'price');
         $this->resName = $this->issetAttr($attributes, 'res_name');
@@ -81,6 +80,9 @@ class Appointment extends BaseModel
         $this->updatedOn = $this->issetAttr($attributes, 'updated_on');
         $this->userId = $this->issetAttr($attributes, 'user_id');
         $this->waitlisted = $this->issetAttr($attributes, 'waitlisted');
+        $this->priceCents = $this->issetAttr($attributes, 'price_cents');
+        $this->quantity = $this->issetAttr($attributes, 'quantity');
+        $this->statusMessage = $this->issetAttr($attributes, 'status_message');
 
         $this->errors = $this->issetAttr($attributes, 'errors');
 

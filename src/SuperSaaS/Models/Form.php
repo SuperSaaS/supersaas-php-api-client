@@ -8,8 +8,6 @@ class Form extends BaseModel
     public $id;
     public $reservationProcessId;
     public $superFormId;
-    public $uniq;
-    public $updatedName;
     public $updatedOn;
     public $userId;
 
@@ -21,11 +19,8 @@ class Form extends BaseModel
         $this->deleted = $this->issetAttr($attributes, 'deleted');
         $this->reservationProcessId = $this->issetAttr($attributes, 'reservation_process_id');
         $this->superFormId = $this->issetAttr($attributes, 'super_form_id');
-        $this->uniq = $this->issetAttr($attributes, 'uniq');
-        $this->updatedName = $this->issetAttr($attributes, 'updated_name');
         $this->updatedOn = $this->issetAttr($attributes, 'updated_on');
         $this->userId = $this->issetAttr($attributes, 'user_id');
-
         $this->errors = $this->issetAttr($attributes, 'errors');
     }
 }

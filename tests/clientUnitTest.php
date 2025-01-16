@@ -1,6 +1,10 @@
 <?php
-use PHPUnit\Framework\TestCase;
+namespace SuperSaaS\Tests;
 
+use PHPUnit\Framework\TestCase;
+use SuperSaaS\Configuration;
+use SuperSaaS\Client;
+use SuperSaaS\RateLimiter;
 class ClientUnitTest extends TestCase
 {
     protected $client;
@@ -8,11 +12,11 @@ class ClientUnitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $config = new SuperSaas\Configuration;
+        $config = new Configuration;
         $config->account_name = 'accnt';
         $config->api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
         $config->dry_run = true;
-        $this->client = new SuperSaas\Client($config);
+        $this->client = new Client($config);
     }
 
     public function testApi()
@@ -31,26 +35,58 @@ class ClientUnitTest extends TestCase
 
     public function testRequestThrottle()
     {
-        if (getenv('RUN_RATE_LIMITER_TEST') !== 'true') {
-            $this->markTestSkipped('Rate limiter test is skipped. Set RUN_RATE_LIMITER_TEST=true to enable it.');
+        if (getenv('SSS_PHP_RATE_LIMITER_TEST') !== 'true') {
+            $this->markTestSkipped('Rate limiter test is skipped. Set SSS_PHP_RATE_LIMITER_TEST=true to enable it.');
         }
 
-        $start = microtime(true);
+        // Max burst allowed without errors
+        for ($i = 0; $i < 4; $i++) {
+            $startTime = microtime(true);
+            $this->client->request('GET', '/test'); // Assuming there's a public throttle method or making it accessible
+            $endTime = microtime(true);
+            $elapsedTime = $endTime - $startTime;
+            
+            $this->assertLessThan(1+0.1, $elapsedTime, 
+                "Expected no throttling, but got a delay of {$elapsedTime} seconds");
+        }
 
-        for ($i = 0; $i < 25; $i++) {
+        // Wait for window to reset
+        usleep((1 + 0.1) * 1000000); // Convert to microseconds
+
+        // Another burst of MAX_REQUESTS should now be allowed
+        for ($i = 0; $i < 4; $i++) {
+            $startTime = microtime(true);
+            $this->client->request('GET', '/test');
+            $endTime = microtime(true);
+            $elapsedTime = $endTime - $startTime;
+            
+            $this->assertLessThan(1+0.1, $elapsedTime, 
+                "Expected no throttling, but got a delay of {$elapsedTime} seconds");
+        }
+
+        // Wait for window to expire and reset
+        usleep((1 + 0.1) * 1000000);
+
+        // Test longer throttling to prevent potential DDOS
+        $startTime = microtime(true);
+        for ($i = 0; $i < 20; $i++) {
             $this->client->request('GET', '/test');
         }
+        $endTime = microtime(true);
+        $elapsedTime = $endTime - $startTime;
 
-        $elapsedTime = microtime(true) - $start;
-        $this->assertGreaterThanOrEqual(5.0, $elapsedTime, "Elapsed time between requests should be greater than or equal to 5.0 seconds.");
+        $this->assertGreaterThan(5.0, $elapsedTime, 
+            "Expected throttling, {$elapsedTime} seconds");
+        $this->assertLessThan(5.1, $elapsedTime, 
+            "Expected throttling, {$elapsedTime} seconds");
     }
 
     public function testInstanceConfiguration() {
-        SuperSaas\Client::configure('accnt', 'xxxxxxxxxxxxxxxxxxxxxx', true, true, 'host');
-        $this->assertEquals('accnt', SuperSaas\Client::Instance()->account_name);
-        $this->assertEquals('xxxxxxxxxxxxxxxxxxxxxx', SuperSaas\Client::Instance()->api_key);
-        $this->assertEquals(true, SuperSaas\Client::Instance()->dry_run);
-        $this->assertEquals(true, SuperSaas\Client::Instance()->verbose);
-        $this->assertEquals('host', SuperSaas\Client::Instance()->host);
+        Client::configure('accnt', 'xxxxxxxxxxxxxxxxxxxxxx', true, true, 'host');
+        $this->assertEquals('accnt', Client::Instance()->account_name);
+        $this->assertEquals('xxxxxxxxxxxxxxxxxxxxxx', Client::Instance()->api_key);
+        $this->assertEquals(true, Client::Instance()->dry_run);
+        $this->assertEquals(true, Client::Instance()->verbose);
+        $this->assertEquals('host', Client::Instance()->host);
     }
 }

@@ -11,7 +11,7 @@ The SuperSaaS API provides services that can be used to add online booking and s
 
 ##### Dependencies
 
-PHP 8.3 or greater.
+PHP 8.4 or greater.
 
 No external libraries. Only the native `json_encode`/`json_decode` and `stream_context_create` standard calls are used.
 
@@ -89,6 +89,7 @@ Get all services/resources by `schedule_id`:
 
 _Note: does not work for capacity type schedules._
 
+
 #### List Fields of a Schedule
 
 Get all the available fields of a schedule by `schedule_id`:
@@ -118,13 +119,13 @@ You only need to specify the attributes you wish to update:
     
 #### Delete User
 
-Delete a single user by `user_id`:
+Delete a single user by `user_id`, and if `webhook=true` is present it will trigger any webhooks connected to the account:
 
     SuperSaaS\Client::Instance()->users->delete(12345); //=> array()
     
 #### Get User
 
-Get a single user by `$user_id`, and if the user does not exist 404 error will be raised:
+Get a single user by `$user_id` with optional `$form`, and if the user does not exist 404 error will be raised:
 
     SuperSaaS\Client::Instance()->users->get(12345); //=> User
 
@@ -201,6 +202,7 @@ Get recently changed appointments by `schedule_id`, with `from` time, `to` time,
 
 #### Get Recent Changes For Slots
 
+This method is deprecated and will be removed in the future.
 Get recently changed appointments for slots by `schedule_id`, with `from_time` time param (see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
 `changesSlots($schedule_id, $from_time = null)`:
 
@@ -208,6 +210,7 @@ Get recently changed appointments for slots by `schedule_id`, with `from_time` t
 
 #### Get Agenda Slots
 
+This method is deprecated and will be removed in the future.
 Get agenda (upcoming) slots by `schedule_id` and `user_id`, with `from_time` view param,
 `agendaSlots($schedule_id, $user_id, $from_time = null)`:
 
@@ -232,7 +235,7 @@ Get range of appointments by `schedule_id`, with `today`, `from` time, `to` time
 
 #### List Template Forms
 
-Get all forms by template `superform_id`, with `from_time`, and `user` params ([see](https://www.supersaas.com/info/dev/form_api)):
+Get all forms by template `superform_id`, with `from_time`, and `user` params ([see](https://www.supersaas.com/info/dev/form_api)) and `limit`/`offset` pagination params:
 
     SuperSaaS\Client::Instance()->forms->getList(12345, '2018-01-31 00:00:00'); //=> array(Form, ...)
 

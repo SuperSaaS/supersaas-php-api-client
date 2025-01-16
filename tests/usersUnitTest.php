@@ -1,6 +1,9 @@
 <?php
-use PHPUnit\Framework\TestCase;
+namespace SuperSaaS\Tests;
 
+use PHPUnit\Framework\TestCase;
+use SuperSaaS\Configuration;
+use SuperSaaS\Client;
 class UsersUnitTest extends TestCase
 {
     protected $client;
@@ -8,11 +11,11 @@ class UsersUnitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $config = new SuperSaas\Configuration;
+        $config = new Configuration;
         $config->account_name = 'accnt';
         $config->api_key = 'xxxxxxxxxxxxxxxxxxxxxx';
         $config->dry_run = true;
-        $this->client = new SuperSaas\Client($config);
+        $this->client = new Client($config);
     }
 
     public function testGet()

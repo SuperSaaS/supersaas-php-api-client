@@ -17,6 +17,10 @@ class User extends BaseModel
     public $phone;
     public $role;
     public $superField;
+    public $timezone;
+    public $updatedOn;
+    public $group;
+    public $webhook;
 
     /**
      * @var \SuperSaaS\Models\Form
@@ -43,6 +47,10 @@ class User extends BaseModel
         $this->phone = $this->issetAttr($attributes, 'phone');
         $this->role = $this->issetAttr($attributes, 'role');
         $this->superField = $this->issetAttr($attributes, 'super_field');
+        $this->updatedOn = $this->issetAttr($attributes, key: 'updated_on');
+        $this->timezone = $this->issetAttr($attributes, key: 'timezone');
+        $this->group = $this->issetAttr($attributes, 'group');
+        $this->webhook = $this->issetAttr($attributes, 'webhook');
 
         $this->errors = $this->issetAttr($attributes, 'errors');
 
