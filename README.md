@@ -175,6 +175,41 @@ List appointments by `schedule_id`, with `form` and `start_time` and `limit` vie
 
     SuperSaaS\Client::Instance()->appointments->getList(12345, 67890, TRUE, TRUE); //=> array(Appointment, ...)
 
+#### List Slots
+
+List the slots of a capacity type schedule by `schedule_id`, with optional `start_time` and `finish` datetimes and `limit` (default 100, max 2500) and `offset` params,
+`getList($schedule_id, $start_time = null, $finish = null, $limit = null, $offset = null)`:
+
+    SuperSaaS\Client::Instance()->slots->getList(12345, '2018-01-31 00:00:00', '2018-02-28 00:00:00', 100) //=> array(Slot, ...)
+
+_Note: the slots methods only work for capacity type schedules._
+
+#### Get Slot
+
+Get a single slot by `schedule_id` and `slot_id`:
+
+    SuperSaaS\Client::Instance()->slots->get(12345, 67890); //=> Slot
+
+#### Create Slot
+
+Create a slot with `schedule_id` and slot attributes `start`, `finish`, `title`, `description`, `location`, `capacity`, `price` and `color`.
+A `capacity` of `'-'` means unlimited, `0` means no places. A `color` is a hex code like `'#ff0000'` or a palette number:
+
+    SuperSaaS\Client::Instance()->slots->create(12345, array('start' => '2018-01-31 10:00:00', 'finish' => '2018-01-31 11:00:00', 'title' => 'Yoga', 'capacity' => 10)); //=> www.supersaas.com/api/slots/34554.json
+
+#### Update Slot
+
+Update a slot by `schedule_id` and `slot_id` with slot attributes, see above,
+`update($schedule_id, $slot_id, $attributes)`:
+
+    SuperSaaS\Client::Instance()->slots->update(12345, 67890, array('capacity' => '-')); //=> array()
+
+#### Delete Slot
+
+Delete a single slot by `schedule_id` and `slot_id`. This also deletes the bookings on the slot:
+
+    SuperSaaS\Client::Instance()->slots->delete(12345, 67890); //=> array()
+
 #### Get Agenda
 
 Get agenda (upcoming) appointments by `schedule_id` and `user_id`, with `from_time` view param ([see](https://www.supersaas.com/info/dev/appointment_api#agenda),
