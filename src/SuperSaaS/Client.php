@@ -6,6 +6,7 @@ use SuperSaaS\API\Forms;
 use SuperSaaS\API\Groups;
 use SuperSaaS\API\Promotions;
 use SuperSaaS\API\Schedules;
+use SuperSaaS\API\Slots;
 use SuperSaaS\API\Users;
 
 //use SuperSaaS\API;
@@ -62,6 +63,11 @@ use SuperSaaS\RateLimiter;
     public Schedules $schedules;
 
     /**
+     * @var Slots
+     */
+    public Slots $slots;
+
+    /**
      * @var Users
      */
     public Users $users;
@@ -109,6 +115,7 @@ use SuperSaaS\RateLimiter;
         $this->appointments = new API\Appointments($this);
         $this->forms = new API\Forms($this);
         $this->schedules = new API\Schedules($this);
+        $this->slots = new API\Slots($this);
         $this->users = new API\Users($this);
         $this->groups = new API\Groups($this);
         $this->promotions = new API\Promotions($this);

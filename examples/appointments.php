@@ -32,5 +32,14 @@
         $client->appointments->update($schedule_id, $appointment_id, array('full_name' => 'New Name'));
     }
 
+    // Slots only exist for capacity type schedules
+    $slot_id = getenv('SSS_SLOT_ID');
+    if (!empty($slot_id)) {
+        echo "\n\rlisting slots...\n\r";
+        $client->slots->getList($schedule_id, $from, null, 10);
+        echo "\n\rupdating slot " . $slot_id . ",...\n\r";
+        $client->slots->update($schedule_id, $slot_id, array('title' => 'New Title'));
+    }
+
     echo "\n\r";
 ?>
