@@ -38,21 +38,21 @@ class AppointmentsUnitTest extends TestCase
         $this->assertNotNull($this->client->appointments->update(12345, 67890, $this->appointmentAttributes()));
     }
 
-    public function testCreateSendsDescriptionQuantityAndFormId() {
+    public function testCreateSendsDescriptionAndQuantityButNotFormId() {
         $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->create(12345, $attributes, 67890);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertSame(7, $booking['form_id']);
+        $this->assertArrayNotHasKey('form_id', $booking);
         $this->assertSame(3, $booking['quantity']);
     }
 
-    public function testUpdateSendsDescriptionQuantityAndFormId() {
+    public function testUpdateSendsDescriptionAndQuantityButNotFormId() {
         $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->update(12345, 67890, $attributes);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertSame(7, $booking['form_id']);
+        $this->assertArrayNotHasKey('form_id', $booking);
         $this->assertSame(3, $booking['quantity']);
     }
 

@@ -149,7 +149,9 @@ Create an appointment with `schedule_id`, and `user_id(optional)` (see API docum
 
     SuperSaaS\Client::Instance()->appointments->create(12345, 67890, array('full_name' => 'Example Name', 'email' => 'example@example.com', 'slot_id' => 12345), TRUE, TRUE); //=> www.supersaas.com/api/bookings/34554.json
 
-These booking attributes are sent: `start`, `finish`, `full_name`, `email`, `address`, `mobile`, `phone`, `country`, `field_1`, `field_2`, `field_1_r`, `field_2_r`, `super_field` and `description`, `form_id` to connect an existing form, and what is booked: `resource_id` on a resource schedule, or `slot_id` and `quantity` (number of places) on a capacity schedule. These are the attributes the API accepts; others are not sent. The API does not support creating bookings on service schedules.
+**Input attributes** are sent on create and update: `start`, `finish`, `full_name`, `email`, `address`, `mobile`, `phone`, `country`, `field_1`, `field_2`, `field_1_r`, `field_2_r`, `super_field` and `description`, plus what is booked: `resource_id` on a resource schedule, or `slot_id` and `quantity` (number of places) on a capacity schedule. Any other attribute is not sent. The API does not support creating bookings on service schedules.
+
+**Read-only attributes** are returned when reading appointments but never sent: `id`, `created_on`, `updated_on`, `created_by`, `updated_by`, `user_id`, `deleted`, `res_name`, `service_id`, `service_name`, `waitlisted`, `form_id`, and `form` when reading with `form` set.
 
 #### Update Appointment/Booking
 
