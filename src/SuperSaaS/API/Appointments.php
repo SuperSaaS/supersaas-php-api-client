@@ -257,7 +257,7 @@ class Appointments extends BaseApi
     }
 
     /**
-     * description is for resource schedules, service_id for service schedules, quantity for capacity schedules
+     * description is for resource schedules, quantity (number of places) for capacity schedules; form_id connects a form
      */
     private function bookingParams($attributes): array
     {
@@ -278,8 +278,8 @@ class Appointments extends BaseApi
             'resource_id' => $attributes['resource_id'],
             'slot_id' => $attributes['slot_id'],
             'description' => $attributes['description'] ?? null,
-            'service_id' => $attributes['service_id'] ?? null,
-            'quantity' => $attributes['quantity'] ?? null
+            'quantity' => $attributes['quantity'] ?? null,
+            'form_id' => $attributes['form_id'] ?? null
         );
     }
 }

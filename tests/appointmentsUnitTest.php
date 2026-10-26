@@ -38,21 +38,21 @@ class AppointmentsUnitTest extends TestCase
         $this->assertNotNull($this->client->appointments->update(12345, 67890, $this->appointmentAttributes()));
     }
 
-    public function testCreateSendsDescriptionServiceAndQuantity() {
-        $attributes = array_merge($this->appointmentAttributes(), array('service_id' => 7, 'quantity' => 3));
+    public function testCreateSendsDescriptionQuantityAndFormId() {
+        $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->create(12345, $attributes, 67890);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertSame(7, $booking['service_id']);
+        $this->assertSame(7, $booking['form_id']);
         $this->assertSame(3, $booking['quantity']);
     }
 
-    public function testUpdateSendsDescriptionServiceAndQuantity() {
-        $attributes = array_merge($this->appointmentAttributes(), array('service_id' => 7, 'quantity' => 3));
+    public function testUpdateSendsDescriptionQuantityAndFormId() {
+        $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->update(12345, 67890, $attributes);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertSame(7, $booking['service_id']);
+        $this->assertSame(7, $booking['form_id']);
         $this->assertSame(3, $booking['quantity']);
     }
 
@@ -62,7 +62,7 @@ class AppointmentsUnitTest extends TestCase
         $this->client->appointments->create(12345, $attributes, 67890);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertArrayNotHasKey('description', $booking);
-        $this->assertArrayNotHasKey('service_id', $booking);
+        $this->assertArrayNotHasKey('form_id', $booking);
         $this->assertArrayNotHasKey('quantity', $booking);
     }
 
