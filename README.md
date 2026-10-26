@@ -149,6 +149,8 @@ Create an appointment with `schedule_id`, and `user_id(optional)` (see API docum
 
     SuperSaaS\Client::Instance()->appointments->create(12345, 67890, array('full_name' => 'Example Name', 'email' => 'example@example.com', 'slot_id' => 12345), TRUE, TRUE); //=> www.supersaas.com/api/bookings/34554.json
 
+Besides the user fields, the booking attributes include `description` (resource schedules), `service_id` (service schedules) and `quantity` (capacity schedules).
+
 #### Update Appointment/Booking
 
 Update an appointment by `schedule_id` and `appointment_id` with appointment attributes, see the above link,

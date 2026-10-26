@@ -93,23 +93,7 @@ class Appointments extends BaseApi
             'schedule_id' => $this->validateId($schedule_id),
             'user_id' => empty($user_id) ? null : $this->validateId($user_id),
             'form' => empty($form) ? null : 'true',
-            'booking' => array(
-                'start' => $attributes['start'],
-                'finish' => $attributes['finish'],
-                'email' => $attributes['email'],
-                'full_name' => $attributes['full_name'],
-                'address' => $attributes['address'],
-                'mobile' => $attributes['mobile'],
-                'phone' => $attributes['phone'],
-                'country' => $attributes['country'],
-                'field_1' => $attributes['field_1'],
-                'field_2' => $attributes['field_2'],
-                'field_1_r' => $attributes['field_1_r'],
-                'field_2_r' => $attributes['field_2_r'],
-                'super_field' => $attributes['super_field'],
-                'resource_id' => $attributes['resource_id'],
-                'slot_id' => $attributes['slot_id']
-            )
+            'booking' => $this->bookingParams($attributes)
         );
         return $this->client->post($path, $params, $query);
     }
@@ -125,23 +109,7 @@ class Appointments extends BaseApi
             'schedule_id' => $this->validateId($schedule_id),
             'form' => empty($form) ? null : 'true',
             'webhook' => $attributes['webhook'],
-            'booking' => array(
-                'start' => $attributes['start'],
-                'finish' => $attributes['finish'],
-                'email' => $attributes['email'],
-                'full_name' => $attributes['full_name'],
-                'address' => $attributes['address'],
-                'mobile' => $attributes['mobile'],
-                'phone' => $attributes['phone'],
-                'country' => $attributes['country'],
-                'field_1' => $attributes['field_1'],
-                'field_2' => $attributes['field_2'],
-                'field_1_r' => $attributes['field_1_r'],
-                'field_2_r' => $attributes['field_2_r'],
-                'super_field' => $attributes['super_field'],
-                'resource_id' => $attributes['resource_id'],
-                'slot_id' => $attributes['slot_id']
-            )
+            'booking' => $this->bookingParams($attributes)
         );
         $params['booking'] = array_filter(
             $params['booking'], function ($value) {
@@ -286,5 +254,32 @@ class Appointments extends BaseApi
             $params['service_id'] = $this->validateId($serviceId);
         }
         return $params;
+    }
+
+    /**
+     * description is for resource schedules, service_id for service schedules, quantity for capacity schedules
+     */
+    private function bookingParams($attributes): array
+    {
+        return array(
+            'start' => $attributes['start'],
+            'finish' => $attributes['finish'],
+            'email' => $attributes['email'],
+            'full_name' => $attributes['full_name'],
+            'address' => $attributes['address'],
+            'mobile' => $attributes['mobile'],
+            'phone' => $attributes['phone'],
+            'country' => $attributes['country'],
+            'field_1' => $attributes['field_1'],
+            'field_2' => $attributes['field_2'],
+            'field_1_r' => $attributes['field_1_r'],
+            'field_2_r' => $attributes['field_2_r'],
+            'super_field' => $attributes['super_field'],
+            'resource_id' => $attributes['resource_id'],
+            'slot_id' => $attributes['slot_id'],
+            'description' => $attributes['description'] ?? null,
+            'service_id' => $attributes['service_id'] ?? null,
+            'quantity' => $attributes['quantity'] ?? null
+        );
     }
 }
