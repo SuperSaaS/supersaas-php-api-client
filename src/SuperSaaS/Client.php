@@ -4,6 +4,7 @@ use AllowDynamicProperties;
 use SuperSaaS\API\Appointments;
 use SuperSaaS\API\Forms;
 use SuperSaaS\API\Groups;
+use SuperSaaS\API\Hooks;
 use SuperSaaS\API\Promotions;
 use SuperSaaS\API\Schedules;
 use SuperSaaS\API\Slots;
@@ -82,6 +83,11 @@ use SuperSaaS\RateLimiter;
      */
     public Promotions $promotions;
 
+    /**
+     * @var Hooks
+     */
+    public Hooks $hooks;
+
 
     public static function instance(): ?Client
     {
@@ -119,6 +125,17 @@ use SuperSaaS\RateLimiter;
         $this->users = new API\Users($this);
         $this->groups = new API\Groups($this);
         $this->promotions = new API\Promotions($this);
+        $this->hooks = new API\Hooks($this);
+    }
+
+    /**
+     * Checks the credentials. Returns true on success (204), throws SSS_Exception otherwise.
+     * @throws SSS_Exception
+     */
+    public function ping(): bool
+    {
+        $this->get("/ping");
+        return true;
     }
 
     /**
@@ -222,7 +239,7 @@ use SuperSaaS\RateLimiter;
                 echo($res . PHP_EOL);
                 echo("==============================" . PHP_EOL);
             }
-            throw new SSS_Exception("HTTP Request Error: {$statusCode} " . $url);
+            throw new SSS_Exception("HTTP Request Error: {$statusCode} " . $url, $statusCode, null, $this->_parseErrors($res));
         } else if (!empty($res)) {
             if ($this->verbose) {
                 echo("Response:" . PHP_EOL);
@@ -235,6 +252,21 @@ use SuperSaaS\RateLimiter;
         } else {
             return $this->_findLocation($http_response_header);
         }
+    }
+
+    /**
+     * Extracts the `errors` array from a JSON error body. Empty for empty or non-JSON bodies.
+     */
+    protected function _parseErrors($body): array
+    {
+        if (!is_string($body) || $body === '') {
+            return array();
+        }
+        $obj = json_decode($body, true);
+        if (is_array($obj) && isset($obj['errors']) && is_array($obj['errors'])) {
+            return $obj['errors'];
+        }
+        return array();
     }
 
     private function _findLocation($array): array|string

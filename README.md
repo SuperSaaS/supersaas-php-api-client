@@ -96,6 +96,14 @@ Get all the available fields of a schedule by `schedule_id`:
 
     SuperSaaS\Client::Instance()->schedules->fieldList(12345); //=> array(FieldList, ...)
 
+#### List Input Fields of a Schedule
+
+Get the fields a customer can fill in when booking on a schedule by `schedule_id`:
+
+    SuperSaaS\Client::Instance()->schedules->inputFieldList(12345); //=> array(FieldList, ...)
+
+Each `FieldList` has `name`, `type`, `label`, `required`, `advanced` and `spec`.
+
 #### Create User
 
 Create a user with user attribute params `create($attributes, $user_id = null, $webhook = null, $duplicate = null)`.
@@ -141,6 +149,12 @@ User can have a form attached, and setting `form=true` shows the data:
 Get all the fields available to user object:
 
     SuperSaaS\Client::Instance()->users->fieldList() //=> array(FieldList, ...)
+
+#### List Input Fields of User object
+
+Get the user fields that can be filled in (a user form):
+
+    SuperSaaS\Client::Instance()->users->inputFieldList() //=> array(FieldList, ...)
 
 #### Create Appointment/Booking
 
@@ -311,6 +325,45 @@ Duplicate a template promotion by giving (new) `promotion_code` and `template_co
 `duplicatePromotionCode($promotionCode, $templateCode)`:
 
     Supersaas::Client.instance.promotions.duplicatePromotionCode(12345, 94832838)
+
+#### Ping
+
+Check that the account name and API key are valid. Returns `true`, or throws an `SSS_Exception` (for example on 401):
+
+    SuperSaaS\Client::Instance()->ping(); //=> true
+
+#### Create Webhook
+
+Create a webhook with `create($targetUrl, $event, $parentId)`. `event` is a single letter:
+U user created, M user modified, N new appointment, C changed appointment, R reminder, F follow-up,
+S form submitted, O form changed, H mail, P credit purchase. `parentId` is the schedule id for N/C/R/F, the super form id
+for S/O, and for U/M/H/P any id (the account is used). Returns the id of the hook and its parent:
+
+    SuperSaaS\Client::Instance()->hooks->create('https://www.example.com/hook', 'N', 12345); //=> array('id' => 123, 'parent_id' => 12345)
+
+#### Delete Webhook
+
+    SuperSaaS\Client::Instance()->hooks->delete(123, 12345); //=> array()
+
+#### List Webhooks
+
+    SuperSaaS\Client::Instance()->hooks->getList(); //=> array(array(...), ...)
+
+## Error Handling
+
+Failed requests throw `SuperSaaS\SSS_Exception`. The message is unchanged (`HTTP Request Error: 404 <url>`), and in addition:
+
+* `getCode()` returns the HTTP status code (`0` for errors raised by the client itself, such as invalid parameters).
+* `getErrors()` returns the `errors` array of the JSON response body (for example `array(array('status' => '404', 'title' => 'Not found'))`), or an empty array if there is none.
+
+```php
+try {
+    SuperSaaS\Client::Instance()->users->get(999999);
+} catch (SuperSaaS\SSS_Exception $e) {
+    $e->getCode();   //=> 404
+    $e->getErrors(); //=> array(array('status' => '404', 'title' => 'Not found'))
+}
+```
 
 ## Examples
 

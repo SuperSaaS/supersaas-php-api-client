@@ -118,15 +118,12 @@ class Users extends BaseApi
 
     public function fieldList(): array
     {
-        $path = '/field_list';
-        $res = $this->client->get($path);
+        return $this->fetchFieldLists('/field_list');
+    }
 
-        $fieldLists = array();
-        foreach ($res as $attributes) {
-            $fieldLists[] = new Models\FieldList($attributes);
-        }
-
-        return $fieldLists;
+    public function inputFieldList(): array
+    {
+        return $this->fetchFieldLists('/input_field_list');
     }
 
     /**

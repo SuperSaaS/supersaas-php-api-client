@@ -6,6 +6,7 @@ class FieldList extends BaseModel
     public $type;
     public $label;
     public $advanced;
+    public $required;
 
     public $spec;
 
@@ -15,6 +16,7 @@ class FieldList extends BaseModel
         $this->type = $this->issetAttr($attributes, 'type');
         $this->label = $this->issetAttr($attributes, 'label');
         $this->advanced = $this->issetAttr($attributes, 'advanced');
+        $this->required = $this->issetAttr($attributes, 'required');
 
         $this->errors = $this->issetAttr($attributes, 'errors');
 
