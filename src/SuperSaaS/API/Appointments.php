@@ -6,6 +6,16 @@ use SuperSaaS\SSS_Exception;
 class Appointments extends BaseApi
 {
     /**
+     * The booking attributes the API accepts as input. description is for resource schedules,
+     * quantity (number of places) for capacity schedules, form_id attaches an existing form.
+     */
+    private const BOOKING_ATTRIBUTES = array(
+        'start', 'finish', 'email', 'full_name', 'address', 'mobile', 'phone', 'country',
+        'field_1', 'field_2', 'field_1_r', 'field_2_r', 'super_field', 'resource_id', 'slot_id',
+        'description', 'quantity', 'form_id'
+    );
+
+    /**
      * @throws SSS_Exception
      */
     public function agenda($schedule_id, $user, $from_time = null, $slot=false): array
@@ -257,28 +267,14 @@ class Appointments extends BaseApi
     }
 
     /**
-     * Input attributes only. description is for resource schedules, quantity (number of places) for capacity schedules
+     * Input attributes only; any other key in $attributes is not sent.
      */
     private function bookingParams($attributes): array
     {
-        return array(
-            'start' => $attributes['start'],
-            'finish' => $attributes['finish'],
-            'email' => $attributes['email'],
-            'full_name' => $attributes['full_name'],
-            'address' => $attributes['address'],
-            'mobile' => $attributes['mobile'],
-            'phone' => $attributes['phone'],
-            'country' => $attributes['country'],
-            'field_1' => $attributes['field_1'],
-            'field_2' => $attributes['field_2'],
-            'field_1_r' => $attributes['field_1_r'],
-            'field_2_r' => $attributes['field_2_r'],
-            'super_field' => $attributes['super_field'],
-            'resource_id' => $attributes['resource_id'],
-            'slot_id' => $attributes['slot_id'],
-            'description' => $attributes['description'] ?? null,
-            'quantity' => $attributes['quantity'] ?? null
-        );
+        $booking = array();
+        foreach (self::BOOKING_ATTRIBUTES as $key) {
+            $booking[$key] = $attributes[$key] ?? null;
+        }
+        return $booking;
     }
 }

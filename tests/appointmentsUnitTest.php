@@ -38,22 +38,28 @@ class AppointmentsUnitTest extends TestCase
         $this->assertNotNull($this->client->appointments->update(12345, 67890, $this->appointmentAttributes()));
     }
 
-    public function testCreateSendsDescriptionAndQuantityButNotFormId() {
+    public function testCreateSendsDescriptionQuantityAndFormId() {
         $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->create(12345, $attributes, 67890);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertArrayNotHasKey('form_id', $booking);
+        $this->assertSame(7, $booking['form_id']);
         $this->assertSame(3, $booking['quantity']);
     }
 
-    public function testUpdateSendsDescriptionAndQuantityButNotFormId() {
+    public function testUpdateSendsDescriptionQuantityAndFormId() {
         $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
         $this->client->appointments->update(12345, 67890, $attributes);
         $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
         $this->assertSame('Testing.', $booking['description']);
-        $this->assertArrayNotHasKey('form_id', $booking);
+        $this->assertSame(7, $booking['form_id']);
         $this->assertSame(3, $booking['quantity']);
+    }
+
+    public function testCreateWithOnlySomeAttributes() {
+        $this->client->appointments->create(12345, array('start' => '2026-11-02 10:00:00', 'phone' => '555-5555'), 67890);
+        $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
+        $this->assertSame(array('start' => '2026-11-02 10:00:00', 'phone' => '555-5555'), $booking);
     }
 
     public function testCreateOmitsUnsetNewAttributes() {
