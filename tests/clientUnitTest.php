@@ -53,7 +53,7 @@ class ClientUnitTest extends TestCase
         }
 
         // Wait for window to reset
-        usleep((1 + 0.1) * 1000000); // Convert to microseconds
+        usleep((int) ((1 + 0.1) * 1000000)); // Convert to microseconds
 
         // Another burst of MAX_REQUESTS should now be allowed
         for ($i = 0; $i < 4; $i++) {
@@ -67,7 +67,7 @@ class ClientUnitTest extends TestCase
         }
 
         // Wait for window to expire and reset
-        usleep((1 + 0.1) * 1000000);
+        usleep((int) ((1 + 0.1) * 1000000));
 
         // Test longer throttling to prevent potential DDOS
         $startTime = microtime(true);

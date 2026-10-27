@@ -307,8 +307,15 @@ For additional troubleshooting, the client can be configured with the `verbose` 
 
 ## Run internal unit tests (phpunit)
 
-    ./vendor/bin/phpunit # Runs all
+    composer install
+    composer test # Runs all
     ./vendor/bin/phpunit --filter AppointmentsUnitTest # Run selection
+
+Lint and static analysis (also run in CI):
+
+    composer lint    # php -l over all PHP files
+    composer analyse # PHPStan, see phpstan-baseline.neon for known issues
+    composer cs      # PSR-12 style report (informational)
 
 ## Additional Information
 
