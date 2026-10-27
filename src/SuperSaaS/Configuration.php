@@ -2,7 +2,7 @@
 
 class Configuration
 {
-    const DEFAULT_HOST    = "https://www.supersaas.com";
+    const DEFAULT_HOST = "https://www.supersaas.com";
 
     public $account_name;
     public $host;

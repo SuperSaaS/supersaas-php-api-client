@@ -28,7 +28,7 @@ class User extends BaseModel
     public $form;
 
     /**
-     * @param $attributes
+     * @param array $attributes
      */
     public function __construct($attributes=array())
     {
@@ -47,8 +47,8 @@ class User extends BaseModel
         $this->phone = $this->issetAttr($attributes, 'phone');
         $this->role = $this->issetAttr($attributes, 'role');
         $this->superField = $this->issetAttr($attributes, 'super_field');
-        $this->updatedOn = $this->issetAttr($attributes, key: 'updated_on');
-        $this->timezone = $this->issetAttr($attributes, key: 'timezone');
+        $this->updatedOn = $this->issetAttr($attributes, 'updated_on');
+        $this->timezone = $this->issetAttr($attributes, 'timezone');
         $this->group = $this->issetAttr($attributes, 'group');
         $this->webhook = $this->issetAttr($attributes, 'webhook');
 

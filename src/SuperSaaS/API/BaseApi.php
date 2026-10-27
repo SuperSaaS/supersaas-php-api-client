@@ -54,7 +54,7 @@ class BaseApi
     /**
      * @throws SSS_Exception
      */
-    function validatePromotion($value): string
+    public function validatePromotion($value): string
     {
         if (!is_string($value) || !strlen($value) || !preg_match(self::PROMOTION_REGEX, $value)) {
             throw new SSS_Exception('Required parameter promotional code not found or contains other than alphanumeric characters.');
@@ -69,7 +69,7 @@ class BaseApi
     protected function validateUser($value)
     {
         if ($value === null) {
-            return;
+            return null;
         }
 
         if (!is_int($value) && !is_string($value)) {
@@ -96,7 +96,7 @@ class BaseApi
     /**
      * @throws SSS_Exception
      */
-    function validateNotFound($value): string
+    public function validateNotFound($value): string
     {
         $allowedValues = ['error', 'ignore'];
 

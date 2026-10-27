@@ -24,6 +24,9 @@ class Users extends BaseApi
         return $arr;
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function get($user_id, $form=null): Models\User
     {
         $path = $this->_userPath($user_id);
@@ -35,10 +38,11 @@ class Users extends BaseApi
     }
 
     /**
-     * @param  null $user_id
-     * @param  null $webhook
-     * @param  null $duplicate
-     * @return array|mixed|string
+     * @param  array           $attributes User attributes, 'name' is required
+     * @param  int|string|null $user_id    Optional id or foreign key (e.g. '1234fk')
+     * @param  bool|null       $webhook    Trigger webhooks connected to the account
+     * @param  string|null     $duplicate  'ignore' or 'raise'
+     * @return mixed URL of the new user, or the decoded response body
      * @throws SSS_Exception
      */
     public function create($attributes, $user_id = null, $webhook = null, $duplicate = null): mixed
@@ -109,6 +113,9 @@ class Users extends BaseApi
         return $this->client->put($path, $params, $query);
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function delete($user_id, $webhook=null)
     {
         $path = $this->_userPath($this->validateId($user_id));

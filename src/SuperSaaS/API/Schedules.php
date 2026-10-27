@@ -5,6 +5,9 @@ use SuperSaaS\SSS_Exception;
 
 class Schedules extends BaseApi
 {
+    /**
+     * @throws SSS_Exception
+     */
     public function getList(): array
     {
         $path = "/schedules";
