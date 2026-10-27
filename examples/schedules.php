@@ -15,7 +15,9 @@
     foreach($schedules as $schedule) {
       try {
         $client->schedules->resources($schedule->id);
-      } catch (Exception $e) {
+      } catch (SuperSaaS\SSS_Exception $e) {
+        // e.g. capacity type schedules have no resources
+        echo "\n\r" . $e->getMessage() . "\n\r";
       }
     }
     echo "\n\r";
