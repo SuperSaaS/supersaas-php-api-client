@@ -35,7 +35,7 @@ class User extends BaseModel
         $this->address = $this->issetAttr($attributes, 'address');
         $this->country = $this->issetAttr($attributes, 'country');
         $this->createdOn = $this->issetAttr($attributes, 'created_on');
-        $this->credit = $this->issetAttr($attributes, 'address');
+        $this->credit = $this->issetAttr($attributes, 'credit');
         $this->email = $this->issetAttr($attributes, 'email');
         $this->field1 = $this->issetAttr($attributes, 'field_1');
         $this->field2 = $this->issetAttr($attributes, 'field_2');

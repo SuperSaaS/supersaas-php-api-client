@@ -63,6 +63,13 @@ class BehaviourFixesUnitTest extends TestCase
         $this->client->users->create(array('name' => 'Test', 'role' => 5));
     }
 
+    public function testUserModelReadsCredit()
+    {
+        $user = new Models\User(array('address' => 'Main St 1', 'credit' => 12));
+        $this->assertSame(12, $user->credit);
+        $this->assertSame('Main St 1', $user->address);
+    }
+
     public function testRequestWithoutResponseThrowsHttpError()
     {
         $this->client->dry_run = false;
