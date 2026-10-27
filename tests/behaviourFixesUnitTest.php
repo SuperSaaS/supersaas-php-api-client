@@ -39,6 +39,30 @@ class BehaviourFixesUnitTest extends TestCase
         $this->client = new RecordingClient($config);
     }
 
+    private function lastBody(): array
+    {
+        return json_decode($this->client->lastRequest['content'], true);
+    }
+
+    public function testCreateUserSendsRole()
+    {
+        $this->client->users->create(array('name' => 'Test', 'role' => 4));
+        $this->assertSame(4, $this->lastBody()['user']['role']);
+    }
+
+    public function testUpdateUserSendsRole()
+    {
+        $this->client->users->update(12345, array('role' => -1));
+        $this->assertSame(-1, $this->lastBody()['user']['role']);
+    }
+
+    public function testInvalidRoleStillThrows()
+    {
+        $this->expectException(SSS_Exception::class);
+        $this->expectExceptionMessage('Invalid option parameter: 5. Must be one of 3, 4, -1');
+        $this->client->users->create(array('name' => 'Test', 'role' => 5));
+    }
+
     public function testRequestWithoutResponseThrowsHttpError()
     {
         $this->client->dry_run = false;

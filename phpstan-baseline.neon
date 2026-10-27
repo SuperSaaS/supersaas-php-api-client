@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Result of method SuperSaaS\\API\\BaseApi\:\:validateOptions\(\) \(void\) is used\.$#'
-			identifier: method.void
-			count: 2
-			path: src/SuperSaaS/API/Users.php
-
-		-
 			message: '#^Result of function var_dump \(void\) is used\.$#'
 			identifier: function.void
 			count: 1

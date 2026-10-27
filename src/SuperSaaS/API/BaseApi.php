@@ -137,10 +137,12 @@ class BaseApi
     /**
      * @throws SSS_Exception
      */
-    protected function validateOptions($value, $options): void
+    protected function validateOptions($value, $options): mixed
     {
         if (!in_array($value, $options, true)) {
             throw new SSS_Exception("Invalid option parameter: {$value}. Must be one of " . implode(', ', $options));
         }
+
+        return $value;
     }
 }
