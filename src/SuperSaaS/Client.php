@@ -22,17 +22,17 @@ use SuperSaaS\RateLimiter;
     const VERSION = "2.0.1";
 
     /**
-     * @var string
+     * @var string|array|false
      */
     public string|array|false $account_name;
 
     /**
-     * @var string
+     * @var string|array|false
      */
     public string|array|false $api_key;
 
     /**
-     * @var string
+     * @var string|array|false
      */
     public string|array|false $host;
 
@@ -207,7 +207,8 @@ use SuperSaaS\RateLimiter;
 
         $req = stream_context_create(array('http' => $http));
         $res = @file_get_contents($url, false, $req);
-        $statusCode = $this->_httpStatusCode($http_response_header);
+        $responseHeaders = http_get_last_response_headers();
+        $statusCode = $this->_httpStatusCode($responseHeaders);
 
         if ($statusCode < 200 || $statusCode > 299) {
             if ($this->verbose) {
@@ -226,7 +227,7 @@ use SuperSaaS\RateLimiter;
             $obj = json_decode($res, true);
             return $obj;
         } else {
-            return $this->_findLocation($http_response_header);
+            return $this->_findLocation($responseHeaders);
         }
     }
 
@@ -258,12 +259,12 @@ use SuperSaaS\RateLimiter;
         return $valueArr;
     }
 
-    private function _userAgent()
+    private function _userAgent(): string
     {
         return "SSS/" . self::VERSION . " PHP/" . phpversion() . " API/" . self::API_VERSION;
     }
 
-    private function _isAssociativeArray($arr)
+    private function _isAssociativeArray($arr): bool
     {
         if (is_array($arr)) {
             return count(array_filter(array_keys($arr), 'is_string')) > 0;
@@ -276,7 +277,6 @@ use SuperSaaS\RateLimiter;
     {
         if (is_array($headers)) {
             $parts = explode(' ', $headers[0]);
-            print_r($parts);
             if (count($parts) > 1) {
                 return intval($parts[1]);
             }
