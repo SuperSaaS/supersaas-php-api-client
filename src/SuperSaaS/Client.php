@@ -207,7 +207,10 @@ use SuperSaaS\RateLimiter;
 
         $req = stream_context_create(array('http' => $http));
         $res = @file_get_contents($url, false, $req);
-        $responseHeaders = http_get_last_response_headers();
+        // http_get_last_response_headers() exists from PHP 8.4; $http_response_header is deprecated in 8.5.
+        $responseHeaders = function_exists('http_get_last_response_headers')
+            ? http_get_last_response_headers()
+            : ($http_response_header ?? null); // @phpstan-ignore nullCoalesce.variable (unset when no response arrived)
         $statusCode = $this->_httpStatusCode($responseHeaders);
 
         if ($statusCode < 200 || $statusCode > 299) {

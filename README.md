@@ -11,7 +11,7 @@ The SuperSaaS API provides services that can be used to add online booking and s
 
 ##### Dependencies
 
-PHP 8.4 or greater.
+PHP 8.3.36+, 8.4.27+ or 8.5.12+. Older patch releases are excluded because they are affected by the actively exploited remote code execution vulnerabilities CVE-2026-109618 and CVE-2026-109619, fixed in the PHP releases of 2026-10-21.
 
 No external libraries. Only the native `json_encode`/`json_decode` and `stream_context_create` standard calls are used.
 

@@ -28,7 +28,7 @@
     "supersaas"
   ],
   "require": {
-    "php": ">=8.4"
+    "php": "~8.3.36 || ~8.4.27 || >=8.5.12"
   },
   "require-dev": {
     "phpstan/phpstan": "^2.1",
