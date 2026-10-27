@@ -315,7 +315,6 @@ use SuperSaaS\RateLimiter;
     {
         if (is_array($headers)) {
             $parts = explode(' ', $headers[0]);
-            print_r($parts);
             if (count($parts) > 1) {
                 return intval($parts[1]);
             }
