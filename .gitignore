@@ -5,3 +5,4 @@
 composer.phar
 build/*
 .phpunit.result.cache
+.phpunit.cache

@@ -25,6 +25,8 @@ class ClientUnitTest extends TestCase
         $this->assertInstanceOf('SuperSaaS\API\Forms', $this->client->forms);
         $this->assertInstanceOf('SuperSaaS\API\Schedules', $this->client->schedules);
         $this->assertInstanceOf('SuperSaaS\API\Users', $this->client->users);
+        $this->assertInstanceOf('SuperSaaS\API\Groups', $this->client->groups);
+        $this->assertInstanceOf('SuperSaaS\API\Promotions', $this->client->promotions);
     }
 
     public function testRequest() {

@@ -26,7 +26,7 @@ class UsersUnitTest extends TestCase
     public function testGetList() {
         $limit = 10;
         $offset = 0;
-        $this->assertNotNull($this->client->users->getList(12345, $limit, $offset));
+        $this->assertNotNull($this->client->users->getList(true, $limit, $offset));
     }
 
     public function testCreate() {
@@ -58,6 +58,7 @@ class UsersUnitTest extends TestCase
             'field_1' => 'f 1',
             'field_2' => 'f 2',
             'super_field' => 'sf',
+            'timezone' => 'Amsterdam',
             'credit' => 10,
             'role' => 3
         );
