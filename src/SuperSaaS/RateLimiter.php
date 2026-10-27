@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace SuperSaaS;
 
 class RateLimiter {
@@ -9,10 +9,10 @@ class RateLimiter {
     /**
      * @return void
      */
-    public static function throttle(): void 
+    public static function throttle(): void
     {
         self::$queue[] = microtime(true);
-        
+
         if (count(self::$queue) > self::MAX_REQUESTS) {
             array_shift(self::$queue);
         }

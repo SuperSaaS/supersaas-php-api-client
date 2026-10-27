@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Result of function var_dump \(void\) is used\.$#'
+			identifier: function.void
+			count: 1
+			path: src/SuperSaaS/Client.php
+
+		-
+			message: '#^Variable \$params in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/SuperSaaS/Client.php

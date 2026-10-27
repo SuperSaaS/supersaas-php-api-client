@@ -11,7 +11,7 @@ The SuperSaaS API provides services that can be used to add online booking and s
 
 ##### Dependencies
 
-PHP 8.4 or greater.
+PHP 8.3.36+, 8.4.27+ or 8.5.12+. Older patch releases are excluded because they are affected by the actively exploited remote code execution vulnerabilities CVE-2026-109618 and CVE-2026-109619, fixed in the PHP releases of 2026-10-21.
 
 No external libraries. Only the native `json_encode`/`json_decode` and `stream_context_create` standard calls are used.
 
@@ -28,7 +28,7 @@ In `composer.json`:
 
     {
         "require": {
-            "supersaas/supersaas-api-client": "^2"
+            "supersaas/api-client": "^2"
         }
     }
 
@@ -48,7 +48,7 @@ And configured with authorization credentials using the `configure` method:
     
 Or else by (2) simply creating a new client instance and setting the properties manually, e.g.
     
-    $client = new Supersaas\Client();
+    $client = new SuperSaaS\Client();
     $client->account_name = 'accountname';
     $client->api_key = 'apikey';
 
@@ -178,27 +178,27 @@ List appointments by `schedule_id`, with `form` and `start_time` and `limit` vie
 #### Get Agenda
 
 Get agenda (upcoming) appointments by `schedule_id` and `user_id`, with `from_time` view param ([see](https://www.supersaas.com/info/dev/appointment_api#agenda),
-`agenda($schedule_id, $user_id, $from_time = null, $slot=false)`:
+`agenda($schedule_id, $user, $from_time = null, $slot=false)`:
 
-    SuperSaaS\Client::Instance()->appointments->agenda(schedule_id=12345, user_id=67890, form=TRUE, slot=FALSE); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->agenda(12345, 67890, '2018-01-31 00:00:00', FALSE); //=> array(Appointment, ...)
     
-    SuperSaaS\Client::Instance()->appointments->agenda(schedule_id=12345, user_id=67890, form=TRUE, slot=TRUE); //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->agenda(12345, 67890, '2018-01-31 00:00:00', TRUE); //=> array(Slot, ...)
 
 #### Get Available Appointments/Bookings
 
 Get available appointments by `schedule_id`, with `from` time and `length_minutes` and `resource` params ([see](https://www.supersaas.com/info/dev/appointment_api#availability_api),
 `available($schedule_id, $from_time = null, $length_minutes = null, $resource = null, $full = null, $limit = null)`:
 
-    SuperSaaS\Client::Instance()->appointments->available(schedule_id=12345, from='2018-01-31 00:00:00', length_minutes=15, resource='My Class'); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->available(12345, '2018-01-31 00:00:00', 15, 'My Class'); //=> array(Appointment, ...)
 
 #### Get Recent Changes
 
 Get recently changed appointments by `schedule_id`, with `from` time, `to` time, `user` user, `slot` view params (see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
-`changes($schedule_id, $from_time = null, $to=null, $slot=false, $user=null, $limit=null, $offset=null)`:
+`changes($schedule_id, $from = null, $to=null, $slot=false, $user=null, $limit=null, $offset=null)`:
 
-    SuperSaaS\Client::Instance()->appointments->changes(schedule_id=12345, from_time='2018-01-31 00:00:00', slot=FALSE); //=> array(Appointment, ...)
+    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', null, FALSE); //=> array(Appointment, ...)
 
-    SuperSaaS\Client::Instance()->appointments->changes(schedule_id=12345, from_time='2018-01-31 00:00:00', slot=TRUE); //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->changes(12345, '2018-01-31 00:00:00', null, TRUE); //=> array(Slot, ...)
 
 #### Get Recent Changes For Slots
 
@@ -206,7 +206,7 @@ This method is deprecated and will be removed in the future.
 Get recently changed appointments for slots by `schedule_id`, with `from_time` time param (see [docs](https://www.supersaas.com/info/dev/appointment_api#recent_changes)),
 `changesSlots($schedule_id, $from_time = null)`:
 
-    SuperSaaS\Client::Instance()->appointments->changesSlots(schedule_id=12345, from_time='2018-01-31 00:00:00'); //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->changesSlots(12345, '2018-01-31 00:00:00'); //=> array(Slot, ...)
 
 #### Get Agenda Slots
 
@@ -223,7 +223,7 @@ _Note: only works for capacity type schedules._
 Get list of appointments by `schedule_id`, with `today`, `from time`, `to` time and `slot` view param (see updated range function),
 `listAppointments($schedule_id, $today = false, $from_time = null, $to = null, $slot = false)`:
 
-    SuperSaaS\Client::Instance()->appointments->listAppointments(schedule_id=12345, today=TRUE, from_time='2020-01-31 00:00:00',from_time='2020-02-01 00:00:00' slot=False) //=> array(Slot, ...)
+    SuperSaaS\Client::Instance()->appointments->listAppointments(12345, FALSE, '2020-01-31 00:00:00', '2020-02-01 00:00:00', FALSE); //=> array(Appointment, ...)
 
 #### Get range of appointments
 
@@ -268,7 +268,7 @@ Get a list of promotional coupon codes with pagination parameters `limit` and `o
 
 Retrieve information about a single coupon code use with `promotion_code`:
 
-    SuperSaaS\Client::Instance()->promotions->promotion((12345) //=> array(Promotion, ...)
+    SuperSaaS\Client::Instance()->promotions->promotion('12345'); //=> array(Promotion, ...)
 
 #### Duplicate promotion code
 
@@ -284,7 +284,7 @@ The ./examples folder contains several executable PHP scripts demonstrating how 
 The examples will require your account name, api key, and some of the examples a schedule id and/or user id and/or form id. These can be set as environment variables. e.g.
 
     $ export SSS_API_UID=myuserid SSS_API_SCHEDULE=myscheduleid SSS_API_ACCOUNT_NAME=myaccountname  SSS_API_KEY=myapikey && php -f ./examples/appointments.php
-    $ export SSS_API_FORM=myuserid SSS_API_ACCOUNT_NAME=myaccountname SSS_API_KEY=myapikey && php -f ./examples/forms.php
+    $ export SSS_API_FORM=myformid SSS_API_ACCOUNT_NAME=myaccountname SSS_API_KEY=myapikey && php -f ./examples/forms.php
     $ export SSS_API_ACCOUNT_NAME=myaccountname && export SSS_API_KEY=myapikey && php -f ./examples/users.php
 
 ## Testing
@@ -295,20 +295,27 @@ The HTTP requests can be stubbed by configuring the client with the `dry_run` op
 
 Note, stubbed requests always return an empty array.
 
-The `Client` also provides a `last_request` attribute containing the http array object from the last performed request, e.g. 
+The `Client` also provides a `lastRequest` attribute containing the http array object from the last performed request, e.g.
 
-    SuperSaaS\Client::Instance()->last_request; //=> array('method' => ..., 'header' => ..., 'content' => ...)
+    SuperSaaS\Client::Instance()->lastRequest; //=> array('method' => ..., 'header' => ..., 'content' => ...)
 
 The headers, body, etc. of the last request can be inspected for assertion in tests, or for troubleshooting failed API requests.
 
-For additional troubleshooting, the client can be configured with the `verbose` option, which will `puts` any JSON contents in the request and response, e.g.
+For additional troubleshooting, the client can be configured with the `verbose` option, which will print any JSON contents in the request and response, e.g.
 
     SuperSaaS\Client::Instance()->verbose = TRUE;
 
 ## Run internal unit tests (phpunit)
 
-    ./vendor/bin/phpunit # Runs all
+    composer install
+    composer test # Runs all
     ./vendor/bin/phpunit --filter AppointmentsUnitTest # Run selection
+
+Lint and static analysis (also run in CI):
+
+    composer lint    # php -l over all PHP files
+    composer analyse # PHPStan, see phpstan-baseline.neon for known issues
+    composer cs      # PSR-12 style report (informational)
 
 ## Additional Information
 
