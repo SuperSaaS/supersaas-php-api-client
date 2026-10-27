@@ -154,6 +154,18 @@ class BehaviourFixesUnitTest extends TestCase
         $this->assertSame('secret123', $this->lastBody()['user']['password']);
     }
 
+    public function testVerboseOutputPrintsNestedListsAsJson()
+    {
+        $printArray = new \ReflectionMethod($this->client, '_printArray');
+        ob_start();
+        try {
+            $printArray->invoke($this->client, array('booking' => array('resources' => array(1, 2))));
+        } finally {
+            $output = ob_get_clean();
+        }
+        $this->assertStringContainsString('resources = [1,2]', $output);
+    }
+
     public function testRequestWithoutResponseThrowsHttpError()
     {
         $this->client->dry_run = false;

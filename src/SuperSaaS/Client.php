@@ -294,7 +294,11 @@ use SuperSaaS\RateLimiter;
 
     private function _redact($key, $val)
     {
-        return in_array($key, self::REDACTED_KEYS, true) ? '[FILTERED]' : $val;
+        if (in_array($key, self::REDACTED_KEYS, true)) {
+            return '[FILTERED]';
+        }
+        // Nested lists would print as "Array"
+        return is_array($val) ? json_encode($val) : $val;
     }
 
     private function _printArray($arr): void
