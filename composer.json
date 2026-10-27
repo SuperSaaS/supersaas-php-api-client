@@ -1,6 +1,5 @@
 {
   "name": "supersaas/api-client",
-  "version": "2.0.1",
   "description": "Online bookings/appointments/calendars using the SuperSaaS scheduling platform. The SuperSaaS API provides services that can be used to add online booking and scheduling functionality to an existing website or CRM software.",
   "homepage": "https://www.supersaas.com",
   "support": {
