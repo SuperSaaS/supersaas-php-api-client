@@ -120,7 +120,7 @@ class Users extends BaseApi
     {
         $path = $this->_userPath($this->validateId($user_id));
         $query = array('webhook' => empty($webhook) ? null : 'true');
-        return $this->client->delete($path, $query);
+        return $this->client->delete($path, array(), $query);
     }
 
     public function fieldList(): array

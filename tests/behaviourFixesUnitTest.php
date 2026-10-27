@@ -44,6 +44,11 @@ class BehaviourFixesUnitTest extends TestCase
         return json_decode($this->client->lastRequest['content'], true);
     }
 
+    private function lastCall(): array
+    {
+        return end($this->client->requests);
+    }
+
     public function testCreateUserSendsRole()
     {
         $this->client->users->create(array('name' => 'Test', 'role' => 4));
@@ -68,6 +73,25 @@ class BehaviourFixesUnitTest extends TestCase
         $user = new Models\User(array('address' => 'Main St 1', 'credit' => 12));
         $this->assertSame(12, $user->credit);
         $this->assertSame('Main St 1', $user->address);
+    }
+
+    public function testDeleteUserSendsWebhookAsQuery()
+    {
+        $this->client->users->delete(12345, true);
+        $call = $this->lastCall();
+        $this->assertSame('DELETE', $call['method']);
+        $this->assertSame(array(), $call['params']);
+        $this->assertSame(array('webhook' => 'true'), $call['query']);
+        $this->assertSame(array('account_name' => 'accnt'), $this->lastBody());
+    }
+
+    public function testDeleteAppointmentSendsScheduleIdAndWebhookAsQuery()
+    {
+        $this->client->appointments->delete(12345, 67890, true);
+        $call = $this->lastCall();
+        $this->assertSame('/bookings/67890', $call['path']);
+        $this->assertSame(array(), $call['params']);
+        $this->assertSame(array('schedule_id' => 12345, 'webhook' => 'true'), $call['query']);
     }
 
     public function testRequestWithoutResponseThrowsHttpError()

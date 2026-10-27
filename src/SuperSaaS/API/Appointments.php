@@ -161,7 +161,7 @@ class Appointments extends BaseApi
         $query = array('schedule_id' => $schedule_id,
                 'webhook' => empty($webhook) ? null : 'true'
         );
-        return $this->client->delete($path, $query);
+        return $this->client->delete($path, array(), $query);
     }
 
     /**
