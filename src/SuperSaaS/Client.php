@@ -22,6 +22,11 @@ use SuperSaaS\RateLimiter;
     const VERSION = "2.0.1";
 
     /**
+     * Keys whose values verbose mode prints as FILTERED.
+     */
+    private const REDACTED_KEYS = array('password');
+
+    /**
      * @var string|array|false
      */
     public string|array|false $account_name;
@@ -287,16 +292,21 @@ use SuperSaaS\RateLimiter;
         return 0;
     }
 
+    private function _redact($key, $val)
+    {
+        return in_array($key, self::REDACTED_KEYS, true) ? '[FILTERED]' : $val;
+    }
+
     private function _printArray($arr): void
     {
         foreach ($arr as $key => $val) {
             if ($this->_isAssociativeArray($val)) {
                 echo "  $key:\n";
                 foreach ($val as $key2 => $val2) {
-                    echo "    $key2 = $val2\n";
+                    echo "    $key2 = " . $this->_redact($key2, $val2) . "\n";
                 }
             } else {
-                echo "  $key = $val\n";
+                echo "  $key = " . $this->_redact($key, $val) . "\n";
             }
         }
     }

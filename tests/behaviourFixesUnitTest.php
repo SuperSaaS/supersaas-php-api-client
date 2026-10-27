@@ -137,6 +137,23 @@ class BehaviourFixesUnitTest extends TestCase
         $this->assertNull($schedule->name);
     }
 
+    public function testVerboseOutputRedactsPassword()
+    {
+        $this->client->verbose = true;
+        ob_start();
+        try {
+            $this->client->users->create(array('name' => 'Test', 'password' => 'secret123'));
+        } finally {
+            $output = ob_get_clean();
+        }
+        $this->assertStringNotContainsString('secret123', $output);
+        $this->assertStringContainsString('password = [FILTERED]', $output);
+        $this->assertStringContainsString('name = Test', $output);
+        $this->assertStringNotContainsString(base64_encode('accnt:xxxxxxxxxxxxxxxxxxxxxx'), $output);
+        // Only the output is redacted, the request still carries the password.
+        $this->assertSame('secret123', $this->lastBody()['user']['password']);
+    }
+
     public function testRequestWithoutResponseThrowsHttpError()
     {
         $this->client->dry_run = false;
