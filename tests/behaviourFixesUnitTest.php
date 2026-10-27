@@ -49,6 +49,21 @@ class BehaviourFixesUnitTest extends TestCase
         return end($this->client->requests);
     }
 
+    /**
+     * Runs $fn and turns any PHP warning or notice into a test failure.
+     */
+    private function withoutWarnings(callable $fn): mixed
+    {
+        set_error_handler(function ($errno, $errstr) {
+            $this->fail("PHP warning: $errstr");
+        });
+        try {
+            return $fn();
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     public function testCreateUserSendsRole()
     {
         $this->client->users->create(array('name' => 'Test', 'role' => 4));
@@ -92,6 +107,34 @@ class BehaviourFixesUnitTest extends TestCase
         $this->assertSame('/bookings/67890', $call['path']);
         $this->assertSame(array(), $call['params']);
         $this->assertSame(array('schedule_id' => 12345, 'webhook' => 'true'), $call['query']);
+    }
+
+    public function testCreateUserWithOnlyNameDoesNotWarn()
+    {
+        $this->withoutWarnings(fn() => $this->client->users->create(array('name' => 'Test')));
+        $this->assertSame(array('name' => 'Test'), $this->lastBody()['user']);
+    }
+
+    public function testCreateUserWithoutNameStillThrows()
+    {
+        $this->expectException(SSS_Exception::class);
+        $this->expectExceptionMessage('Required parameter is missing.');
+        $this->withoutWarnings(fn() => $this->client->users->create(array('email' => 'test@example.com')));
+    }
+
+    public function testUpdateUserWithPartialAttributesDoesNotWarn()
+    {
+        $this->withoutWarnings(fn() => $this->client->users->update(12345, array('email' => 'new@example.com')));
+        $this->assertSame(array('email' => 'new@example.com'), $this->lastBody()['user']);
+    }
+
+    public function testResourceAndScheduleModelsWithoutAttributesDoNotWarn()
+    {
+        $resource = $this->withoutWarnings(fn() => new Models\Resource());
+        $schedule = $this->withoutWarnings(fn() => new Models\Schedule(array('id' => 1)));
+        $this->assertNull($resource->id);
+        $this->assertSame(1, $schedule->id);
+        $this->assertNull($schedule->name);
     }
 
     public function testRequestWithoutResponseThrowsHttpError()

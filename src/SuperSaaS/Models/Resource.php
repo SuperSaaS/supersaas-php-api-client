@@ -7,7 +7,7 @@ class Resource extends BaseModel
 
     public function __construct($attributes=array())
     {
-        $this->id = $attributes['id'];
-        $this->name = $attributes['name'];
+        $this->id = $this->issetAttr($attributes, 'id');
+        $this->name = $this->issetAttr($attributes, 'name');
     }
 }
