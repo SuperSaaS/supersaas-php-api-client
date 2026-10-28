@@ -72,7 +72,7 @@ class ErrorsAndNewEndpointsUnitTest extends TestCase
 
     public function testHooksCreate()
     {
-        $this->assertNotNull($this->client->hooks->create('https://www.example.com/hook', 'U', 12345));
+        $this->assertIsArray($this->client->hooks->create('https://www.example.com/hook', 'U', 12345));
         $this->assertSame('POST', $this->client->lastRequest['method']);
         $content = json_decode($this->client->lastRequest['content'], true);
         $this->assertSame('https://www.example.com/hook', $content['target_url']);
