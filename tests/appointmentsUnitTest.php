@@ -111,13 +111,13 @@ class AppointmentsUnitTest extends TestCase
     }
 
     public function testListAppointments() {
-            $from = date('Y-m-d H:i:s');
-            $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from));
-        }
+        $from = date('Y-m-d H:i:s');
+        $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from));
+    }
 
     public function testRange() {
         $to = $from = date('Y-m-d H:i:s');
-        $this->assertNotNull($this->client->appointments->listAppointments(12345, FALSE, $from, $to, false, null, null, null, null, null));
+        $this->assertNotNull($this->client->appointments->range(12345, FALSE, $from, $to, false, null, null, null, null, null));
     }
 
     public function testDelete() {

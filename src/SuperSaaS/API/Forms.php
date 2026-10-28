@@ -43,6 +43,9 @@ class Forms extends BaseApi
         return new Models\Form($res);
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function forms(): array
     {
         $path = '/super_forms';

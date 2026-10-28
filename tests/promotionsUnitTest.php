@@ -18,9 +18,9 @@ class PromotionsUnitTest extends TestCase
         $this->client = new Client($config);
     }
 
-    public function tesList()
+    public function testList()
     {
-        $this->assertNotNull($this->client->promotions->getList(10, 10));
+        $this->assertNotNull($this->client->promotions->list(10, 10));
     }
 
     public function testPromotion() {

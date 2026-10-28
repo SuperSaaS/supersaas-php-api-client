@@ -24,6 +24,9 @@ class Users extends BaseApi
         return $arr;
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function get($user_id, $form=null): Models\User
     {
         $path = $this->_userPath($user_id);
@@ -35,10 +38,11 @@ class Users extends BaseApi
     }
 
     /**
-     * @param  null $user_id
-     * @param  null $webhook
-     * @param  null $duplicate
-     * @return array|mixed|string
+     * @param  array           $attributes User attributes, 'name' is required
+     * @param  int|string|null $user_id    Optional id or foreign key (e.g. '1234fk')
+     * @param  bool|null       $webhook    Trigger webhooks connected to the account
+     * @param  string|null     $duplicate  'ignore' or 'raise'
+     * @return mixed URL of the new user, or the decoded response body
      * @throws SSS_Exception
      */
     public function create($attributes, $user_id = null, $webhook = null, $duplicate = null): mixed
@@ -50,18 +54,18 @@ class Users extends BaseApi
         }
         $params = array(
             'user' => array(
-                'name' => $this->validatePresent($attributes['name']),
-                'email' => $attributes['email'],
-                'password' => $attributes['password'],
-                'full_name' => $attributes['full_name'],
-                'address' => $attributes['address'],
-                'mobile' => $attributes['mobile'],
-                'phone' => $attributes['phone'],
-                'timezone' => $attributes['timezone'],
-                'country' => $attributes['country'],
-                'field_1' => $attributes['field_1'],
-                'field_2' => $attributes['field_2'],
-                'super_field' => $attributes['super_field'],
+                'name' => $this->validatePresent($attributes['name'] ?? null),
+                'email' => $attributes['email'] ?? null,
+                'password' => $attributes['password'] ?? null,
+                'full_name' => $attributes['full_name'] ?? null,
+                'address' => $attributes['address'] ?? null,
+                'mobile' => $attributes['mobile'] ?? null,
+                'phone' => $attributes['phone'] ?? null,
+                'timezone' => $attributes['timezone'] ?? null,
+                'country' => $attributes['country'] ?? null,
+                'field_1' => $attributes['field_1'] ?? null,
+                'field_2' => $attributes['field_2'] ?? null,
+                'super_field' => $attributes['super_field'] ?? null,
                 'credit' => isset($attributes['credit']) ? $this->validateNumber($attributes['credit']) : null,
                 'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null,
                 'group' => isset($attributes['group']) ? $this->validateNumber($attributes['group']) : null
@@ -82,18 +86,18 @@ class Users extends BaseApi
         }
         $params = array(
             'user' => array(
-                'name' => $this->validateName($attributes['name']),
-                'email' => $attributes['email'],
-                'password' => $attributes['password'],
-                'full_name' => $attributes['full_name'],
-                'address' => $attributes['address'],
-                'mobile' => $attributes['mobile'],
-                'phone' => $attributes['phone'],
-                'timezone' => $attributes['timezone'],
-                'country' => $attributes['country'],
-                'field_1' => $attributes['field_1'],
-                'field_2' => $attributes['field_2'],
-                'super_field' => $attributes['super_field'],
+                'name' => $this->validateName($attributes['name'] ?? null),
+                'email' => $attributes['email'] ?? null,
+                'password' => $attributes['password'] ?? null,
+                'full_name' => $attributes['full_name'] ?? null,
+                'address' => $attributes['address'] ?? null,
+                'mobile' => $attributes['mobile'] ?? null,
+                'phone' => $attributes['phone'] ?? null,
+                'timezone' => $attributes['timezone'] ?? null,
+                'country' => $attributes['country'] ?? null,
+                'field_1' => $attributes['field_1'] ?? null,
+                'field_2' => $attributes['field_2'] ?? null,
+                'super_field' => $attributes['super_field'] ?? null,
                 'credit' => isset($attributes['credit']) ? $this->validateNumber($attributes['credit']) : null,
                 'role' => isset($attributes['role']) ? $this->validateOptions($attributes['role'], array(3, 4, -1)) : null,
                 'group' => isset($attributes['group']) ? $this->validateNumber($attributes['group']) : null
@@ -109,11 +113,14 @@ class Users extends BaseApi
         return $this->client->put($path, $params, $query);
     }
 
+    /**
+     * @throws SSS_Exception
+     */
     public function delete($user_id, $webhook=null)
     {
         $path = $this->_userPath($this->validateId($user_id));
         $query = array('webhook' => empty($webhook) ? null : 'true');
-        return $this->client->delete($path, $query);
+        return $this->client->delete($path, array(), $query);
     }
 
     public function fieldList(): array
