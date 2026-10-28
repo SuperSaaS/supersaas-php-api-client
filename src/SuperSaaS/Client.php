@@ -21,7 +21,7 @@ use SuperSaaS\RateLimiter;
 #[AllowDynamicProperties] class Client
 {
     const API_VERSION = "3";
-    const VERSION = "2.0.1";
+    const VERSION = "2.1.0";
 
     /**
      * @var string
