@@ -41,16 +41,14 @@ class Schedules extends BaseApi
      */
     public function fieldList($scheduleId): array
     {
-        $path = '/field_list';
-        $query = ['schedule_id' => $this->validateId($scheduleId)];
+        return $this->fetchFieldLists('/field_list', ['schedule_id' => $this->validateId($scheduleId)]);
+    }
 
-        $response = $this->client->get($path, $query);
-
-        $fieldLists = [];
-        foreach ($response as $attributes) {
-            $fieldLists[] = new Models\FieldList($attributes);
-        }
-
-        return $fieldLists;
+    /**
+     * @throws SSS_Exception
+     */
+    public function inputFieldList($scheduleId): array
+    {
+        return $this->fetchFieldLists('/input_field_list', ['schedule_id' => $this->validateId($scheduleId)]);
     }
 }
