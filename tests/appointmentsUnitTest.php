@@ -38,6 +38,45 @@ class AppointmentsUnitTest extends TestCase
         $this->assertNotNull($this->client->appointments->update(12345, 67890, $this->appointmentAttributes()));
     }
 
+    public function testCreateSendsDescriptionQuantityAndFormId() {
+        $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
+        $this->client->appointments->create(12345, $attributes, 67890);
+        $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
+        $this->assertSame('Testing.', $booking['description']);
+        $this->assertSame(7, $booking['form_id']);
+        $this->assertSame(3, $booking['quantity']);
+    }
+
+    public function testUpdateSendsDescriptionQuantityAndFormId() {
+        $attributes = array_merge($this->appointmentAttributes(), array('form_id' => 7, 'quantity' => 3));
+        $this->client->appointments->update(12345, 67890, $attributes);
+        $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
+        $this->assertSame('Testing.', $booking['description']);
+        $this->assertSame(7, $booking['form_id']);
+        $this->assertSame(3, $booking['quantity']);
+    }
+
+    public function testCreateWithOnlySomeAttributes() {
+        $this->client->appointments->create(12345, array('start' => '2026-11-02 10:00:00', 'phone' => '555-5555'), 67890);
+        $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
+        $this->assertSame(array('start' => '2026-11-02 10:00:00', 'phone' => '555-5555'), $booking);
+    }
+
+    public function testCreateOmitsUnsetNewAttributes() {
+        $attributes = $this->appointmentAttributes();
+        unset($attributes['description']);
+        $this->client->appointments->create(12345, $attributes, 67890);
+        $booking = json_decode($this->client->lastRequest['content'], true)['booking'];
+        $this->assertArrayNotHasKey('description', $booking);
+        $this->assertArrayNotHasKey('form_id', $booking);
+        $this->assertArrayNotHasKey('quantity', $booking);
+    }
+
+    public function testModelReadsDescription() {
+        $appointment = new \SuperSaaS\Models\Appointment(array('id' => 1, 'description' => 'Court 2'));
+        $this->assertSame('Court 2', $appointment->description);
+    }
+
     public function testAgenda() {
         $from = date('Y-m-d H:i:s');
         $this->assertNotNull($this->client->appointments->agenda(12345, 67890, $from));

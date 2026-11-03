@@ -7,6 +7,7 @@ class Appointment extends BaseModel
     public $createdBy;
     public $createdOn;
     public $deleted;
+    public $description;
     public $email;
     public $field1;
     public $field2;
@@ -62,6 +63,7 @@ class Appointment extends BaseModel
         $this->finish = $this->issetAttr($attributes, 'finish');
         $this->formId = $this->issetAttr($attributes, 'form_id');
         $this->fullName = $this->issetAttr($attributes, 'full_name');
+        $this->description = $this->issetAttr($attributes, 'description');
         $this->id = $this->issetAttr($attributes, 'id');
         $this->mobile = $this->issetAttr($attributes, 'mobile');
         $this->phone = $this->issetAttr($attributes, 'phone');

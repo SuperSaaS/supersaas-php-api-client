@@ -1,6 +1,7 @@
 <?php namespace SuperSaaS\API;
 
 use SuperSaaS\Client;
+use SuperSaaS\Models;
 use SuperSaaS\SSS_Exception;
 
 class BaseApi
@@ -15,6 +16,19 @@ class BaseApi
     public function __construct($client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * GETs a list of field definitions and wraps each in a FieldList model.
+     * @throws SSS_Exception
+     */
+    protected function fetchFieldLists($path, $query = array()): array
+    {
+        $fieldLists = array();
+        foreach ($this->client->get($path, $query) as $attributes) {
+            $fieldLists[] = new Models\FieldList($attributes);
+        }
+        return $fieldLists;
     }
 
     /**

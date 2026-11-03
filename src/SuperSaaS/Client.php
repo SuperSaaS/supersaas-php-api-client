@@ -4,8 +4,10 @@ use AllowDynamicProperties;
 use SuperSaaS\API\Appointments;
 use SuperSaaS\API\Forms;
 use SuperSaaS\API\Groups;
+use SuperSaaS\API\Hooks;
 use SuperSaaS\API\Promotions;
 use SuperSaaS\API\Schedules;
+use SuperSaaS\API\Slots;
 use SuperSaaS\API\Users;
 
 //use SuperSaaS\API;
@@ -19,7 +21,7 @@ use SuperSaaS\RateLimiter;
 #[AllowDynamicProperties] class Client
 {
     const API_VERSION = "3";
-    const VERSION = "2.0.1";
+    const VERSION = "2.1.0";
 
     /**
      * Keys whose values verbose mode prints as FILTERED.
@@ -67,6 +69,11 @@ use SuperSaaS\RateLimiter;
     public Schedules $schedules;
 
     /**
+     * @var Slots
+     */
+    public Slots $slots;
+
+    /**
      * @var Users
      */
     public Users $users;
@@ -80,6 +87,11 @@ use SuperSaaS\RateLimiter;
      * @var Promotions
      */
     public Promotions $promotions;
+
+    /**
+     * @var Hooks
+     */
+    public Hooks $hooks;
 
 
     public static function instance(): ?Client
@@ -114,9 +126,21 @@ use SuperSaaS\RateLimiter;
         $this->appointments = new API\Appointments($this);
         $this->forms = new API\Forms($this);
         $this->schedules = new API\Schedules($this);
+        $this->slots = new API\Slots($this);
         $this->users = new API\Users($this);
         $this->groups = new API\Groups($this);
         $this->promotions = new API\Promotions($this);
+        $this->hooks = new API\Hooks($this);
+    }
+
+    /**
+     * Checks the credentials. Returns true on success (204), throws SSS_Exception otherwise.
+     * @throws SSS_Exception
+     */
+    public function ping(): bool
+    {
+        $this->get("/ping");
+        return true;
     }
 
     /**
@@ -224,7 +248,7 @@ use SuperSaaS\RateLimiter;
                 echo($res . PHP_EOL);
                 echo("==============================" . PHP_EOL);
             }
-            throw new SSS_Exception("HTTP Request Error: {$statusCode} " . $url);
+            throw new SSS_Exception("HTTP Request Error: {$statusCode} " . $url, $statusCode, null, $this->_parseErrors($res));
         } else if (!empty($res)) {
             if ($this->verbose) {
                 echo("Response:" . PHP_EOL);
@@ -237,6 +261,21 @@ use SuperSaaS\RateLimiter;
         } else {
             return $this->_findLocation($responseHeaders);
         }
+    }
+
+    /**
+     * Extracts the `errors` array from a JSON error body. Empty for empty or non-JSON bodies.
+     */
+    protected function _parseErrors($body): array
+    {
+        if (!is_string($body) || $body === '') {
+            return array();
+        }
+        $obj = json_decode($body, true);
+        if (is_array($obj) && isset($obj['errors']) && is_array($obj['errors'])) {
+            return $obj['errors'];
+        }
+        return array();
     }
 
     private function _findLocation($array): array|string
